@@ -8,7 +8,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#fbc341"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -18,6 +18,9 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.fourthape.satyaschool"
     },
     "web": {
       "favicon": "./assets/favicon.png"
