@@ -8,6 +8,16 @@ import Auth1 from '../../assets/images/auth/auth-1.png';
 const {width} = Dimensions.get('window');
 
 export default class Auth extends React.Component {
+  gotoLogin = () => {
+    const {navigation} = this.props;
+    navigation.navigate('Login');
+  }
+
+  gotoRegister = () => {
+    const {navigation} = this.props;
+    navigation.navigate('Register');
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -21,10 +31,10 @@ export default class Auth extends React.Component {
               <Text style={styles.authText1}>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</Text>
             </View>
             <View style={styles.flex}>
-              <TouchableOpacity style={[styles.authBtn1, styles.centerFlex]}>
+              <TouchableOpacity style={[styles.authBtn1, styles.centerFlex]} onPress={this.gotoRegister}>
                 <Text style={styles.authText}>Register</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.authBtn1, styles.centerFlex]}>
+              <TouchableOpacity style={[styles.authBtn1, styles.centerFlex]} onPress={this.gotoLogin}>
                 <Text style={styles.authText}>Login</Text>
               </TouchableOpacity>
             </View>
