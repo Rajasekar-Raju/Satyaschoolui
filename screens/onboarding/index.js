@@ -8,8 +8,11 @@ import {colors} from '../../utils/contants';
 import Slide1 from './Slide1';
 import Slide2 from './Slide2';
 import Slide3 from './Slide3';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export default class Onboarding extends React.Component {
+  state = {lang: null};
+
   nextSlide = () => {
     this.refs.swiper.scrollBy(1);
   }
@@ -19,14 +22,23 @@ export default class Onboarding extends React.Component {
     navigation.navigate('Auth');
   }
 
+  async componentDidMount() {
+    let langID = await AsyncStorage.getItem('language');
+    this.setState({lang: langID});
+  }
+
   render() {
+    const {lang} = this.state;
+    if(!lang)
+      return null;
+
     return (
       <View style={styles.container}>
-        <StatusBar style="light" backgroundColor={colors.primary} />
+        <StatusBar style="dark" backgroundColor={colors.primary} />
         <Swiper ref={'swiper'} showsButtons={false} showsPagination={false} loop={false}>
-          <Slide1 gotoAuth={this.gotoAuth} nextSlide={this.nextSlide} />
-          <Slide2 gotoAuth={this.gotoAuth} nextSlide={this.nextSlide} />
-          <Slide3 gotoAuth={this.gotoAuth} nextSlide={this.nextSlide} />
+          <Slide1 gotoAuth={this.gotoAuth} lang={lang} nextSlide={this.nextSlide} />
+          <Slide2 gotoAuth={this.gotoAuth} lang={lang} nextSlide={this.nextSlide} />
+          <Slide3 gotoAuth={this.gotoAuth} lang={lang} nextSlide={this.nextSlide} />
         </Swiper>
       </View>
     );

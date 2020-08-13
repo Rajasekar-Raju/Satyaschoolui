@@ -13,20 +13,22 @@ import Failure from './screens/auth/Failure';
 
 import Left from './assets/images/common/left.png';
 
-import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { colors } from './utils/contants';
+import { colors, language } from './utils/contants';
+import Questionnaire from './screens/dashboard/Qusetionnaire';
+import Lang from './screens/auth/Lang';
+import AsyncStorage from '@react-native-community/async-storage';
 
-const isFirst = false;
+const isFirst = true;
 
 const HeaderTitle = ({heading, subHeading}) => (
   <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
     <View style={{position: 'absolute', zIndex: 5}}>
-      <Text style={{fontSize: 36, lineHeight: 49, color: `${colors.black}10`, fontFamily: 'Poppins_900Black'}}>{heading}</Text>
+      <Text style={{fontSize: 36, lineHeight: 49, color: `${colors.black}10`, fontFamily: 'Poppins_900Black'}} numberOfLines={1}>{heading}</Text>
     </View>
     <View style={{position: 'relative', zIndex: 10}}>
-      <Text style={{fontSize: 18, lineHeight: 24, color: colors.primary, fontFamily: 'Poppins_600SemiBold'}}>{subHeading}</Text>
+      <Text style={{fontSize: 18, lineHeight: 24, color: colors.primary, fontFamily: 'Poppins_600SemiBold', fontWeight: 'bold'}} numberOfLines={1}>{subHeading}</Text>
     </View>
   </View>
 );
@@ -39,44 +41,140 @@ const HeaderLeft = ({onPress}) => (
 
 const Stack = createStackNavigator();
 
-const headerOptions = (heading, subHeading) => {
+const headerOptions = (heading, subHeading, lang) => {
   return {
     headerStyle: {elevation: 0, shadowOpacity: 0},
-    headerTitle: () => <HeaderTitle heading={heading} subHeading={subHeading} />,
+    headerTitle: () => <HeaderTitle heading={language[lang][`${heading}`]} subHeading={language[lang][`${subHeading}`]} />,
     headerLeft: props => <HeaderLeft {...props} />,
     headerRight: props => <View></View>
   }
 }
 
-const RegisterStack = () => (
-  <Stack.Navigator initialRouteName={'Register'}>
-    <Stack.Screen name='Register' component={Register} options={headerOptions('Auth', 'Register')} />
-    <Stack.Screen name='Parent' component={Parent} options={headerOptions('Auth', 'Register')} />
-    <Stack.Screen name='Physician' component={Physician} options={headerOptions('Auth', 'Register')} />
-    <Stack.Screen name='Waiting' component={Waiting} options={headerOptions('Auth', 'Register')} />
-    <Stack.Screen name='Success' component={Success} options={headerOptions('Auth', 'Register')} />
-    <Stack.Screen name='Failure' component={Failure} options={headerOptions('Auth', 'Register')} />
-  </Stack.Navigator>
-)
+class RegisterStack extends React.Component { 
+  state = {lang: null};
 
-const AuthStack = () => (
-  <NavigationContainer>
-    <Stack.Navigator initialRouteName={'Auth'}>
-      <Stack.Screen name='Auth' component={Auth} options={{headerShown: false}} />
-      <Stack.Screen name='Login' component={Login} options={headerOptions('Auth', 'Login')} />
-      <Stack.Screen name='Register' component={RegisterStack} options={{headerShown: false}} />
-    </Stack.Navigator>
-  </NavigationContainer>
-)
+  async componentDidMount() {
+    let lang = await AsyncStorage.getItem('language');
+    this.setState({lang});
+  }
 
-const OnBoardStack = createSwitchNavigator({
-  Onboarding: Onboarding,
-  Auth: AuthStack,
-}, {
-  initialRouteName: 'Onboarding',
-  lazy: false
-});
+  render() { 
+    const {route} = this.props;
+    const {lang} = this.state;
 
-const RootNavigator = createSwitchNavigator(isFirst ? {OnBoardStack} : {AuthStack});
+    if(lang === null)
+      return null;
 
-export default createAppContainer(RootNavigator);
+    return (
+      <Stack.Navigator initialRouteName={'Register'}>
+        <Stack.Screen name='Register' component={Register} options={headerOptions('auth', 'register', lang)} />
+        <Stack.Screen name='Parent' component={Parent} options={headerOptions('auth', 'register', lang)} />
+        <Stack.Screen name='Physician' component={Physician} options={headerOptions('auth', 'register', lang)} />
+        <Stack.Screen name='Waiting' component={Waiting} options={headerOptions('auth', 'register', lang)} />
+        <Stack.Screen name='Success' component={Success} options={headerOptions('auth', 'register', lang)} />
+        <Stack.Screen name='Failure' component={Failure} options={headerOptions('auth', 'register', lang)} />
+      </Stack.Navigator>
+    );
+  }
+}
+
+class AuthStack extends React.Component { 
+  state = {lang: null};
+
+  async componentDidMount() {
+    let lang = await AsyncStorage.getItem('language');
+    this.setState({lang});
+  }
+
+  render() { 
+    const {route} = this.props;
+    const {lang} = this.state;
+
+    if(lang === null)
+      return null;
+
+    return (
+      <Stack.Navigator initialRouteName={'Auth'}>
+        <Stack.Screen name='Auth' component={Auth} initialParams={{rootRoute: route}} options={{headerShown: false}} />
+        <Stack.Screen name='Login' component={Login} initialParams={{rootRoute: route}} options={headerOptions('auth', 'login', lang)} />
+        <Stack.Screen name='Register' component={RegisterStack} initialParams={{rootRoute: route}} options={{headerShown: false}} />
+      </Stack.Navigator>
+    );
+  }
+}
+
+class OnboardingStack extends React.Component { 
+  state = {lang: null};
+
+  async componentDidMount() {
+    let lang = await AsyncStorage.getItem('language');
+    this.setState({lang: lang === null ? 'en' : lang});
+  }
+
+  async componentDidUpdate() {
+    let lang = await AsyncStorage.getItem('language');
+    this.setState({lang: lang === null ? 'en' : lang});
+  }
+
+  render() {
+    const {route} = this.props;
+    const {lang} = this.state;
+
+    if(lang === null)
+      return null;
+
+    return (
+      <Stack.Navigator initialRouteName={'Lang'}>
+        <Stack.Screen name='Lang' component={Lang} initialParams={{rootRoute: route}} options={{headerShown: false}} />
+        <Stack.Screen name='Onboarding' component={Onboarding} initialParams={{rootRoute: route}} options={headerOptions('features', 'onboarding', lang)} />
+      </Stack.Navigator>
+    )
+  }
+}
+
+class AppStack extends React.Component { 
+  state = {lang: null};
+
+  async componentDidMount() {
+    let lang = await AsyncStorage.getItem('language');
+    this.setState({lang});
+  }
+
+  render() { 
+    const {route} = this.props;
+    const {lang} = this.state;
+
+    if(lang === null)
+      return null;
+
+    return (
+      <Stack.Navigator initialRouteName={'Questionnaire'}>
+        <Stack.Screen name='Questionnaire' component={Questionnaire} initialParams={{rootRoute: route}} options={headerOptions('dashboard', 'questionnaire', lang)} />
+      </Stack.Navigator>
+    )
+  }
+}
+
+class Navigation extends React.Component {
+  state = {initScreen: 'Onboarding', lang: 'en'};
+
+  setLanguage = lang => {
+    this.setState({lang});
+  }
+
+  render() {
+    const {initScreen, lang} = this.state;
+
+    return (
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName={initScreen}>
+          <Stack.Screen name="Onboarding" component={OnboardingStack} initialParams={{lang, setLanguage: this.setLanguage}} options={{headerShown: false}} />
+          <Stack.Screen name="Auth" component={AuthStack} initialParams={{lang, setLanguage: this.setLanguage}} options={{headerShown: false}} />
+          <Stack.Screen name="App" component={AppStack} initialParams={{lang, setLanguage: this.setLanguage}} options={{headerShown: false}} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+}
+
+export default Navigation;

@@ -1,14 +1,14 @@
 import React from 'react';
 import {View, TouchableOpacity, Text, StyleSheet, Image} from 'react-native';
 
-import {colors} from '../../utils/contants';
+import {colors, language} from '../../utils/contants';
 import Oboarding2 from '../../assets/images/onboarding/oboarding-2.png';
 import Right from '../../assets/images/common/right.png';
 import SmallX from '../../assets/images/common/x-small.png';
 
 export default class Slide1 extends React.Component {
   render() {
-    const {nextSlide, gotoAuth} = this.props;
+    const {nextSlide, gotoAuth, lang} = this.props;
 
     return (
       <View style={[styles.onboardingScreen1, styles.centerFlex, styles.justifyBetween]}>
@@ -20,9 +20,9 @@ export default class Slide1 extends React.Component {
               <View style={styles.skipRound}/>
             </View>
             <View>
-              <TouchableOpacity style={[styles.onboardingSkip, styles.centerFlex, styles.flexRow]} onPress={gotoAuth}>
+              <TouchableOpacity style={[styles.onboardingSkip, styles.centerFlex, styles.flexRow, {height: 30}]} onPress={gotoAuth}>
                 <View>
-                  <Text style={styles.skip}>Skip</Text>
+                  <Text style={styles.skip}>{language[lang].skip}</Text>
                 </View>
                 <View style={styles.skipX}>
                   <Image source={SmallX} />
@@ -30,8 +30,8 @@ export default class Slide1 extends React.Component {
               </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.padding50}>
-            <Text style={styles.onboardingText1}>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</Text>
+          <View style={[styles.padding50, styles.paddingV40]}>
+            <Text style={styles.onboardingText1}>{language[lang].lorem20}</Text>
           </View>
         </View>
         <View style={[styles.justifyBetween, styles.centerFlex, styles.padding50]}>
@@ -71,10 +71,13 @@ const styles = StyleSheet.create({
   padding50: {
     padding: 50
   },
+  paddingV40: {
+    paddingVertical: 40
+  },
   onboardingText1: {
     letterSpacing: 0.3,
     fontSize: 24,
-    lineHeight: 28,
+    lineHeight: 30,
     marginBottom: 25,
     fontFamily: 'Poppins_400Regular',
   },
@@ -100,7 +103,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     letterSpacing: 0.3,
     fontSize: 14,
-    lineHeight: 14,
+    lineHeight: 18,
     fontFamily: 'Poppins_400Regular',
   },
   skipRound: {

@@ -2,12 +2,15 @@ import React from 'react';
 import {View, TouchableOpacity, Text, StyleSheet, Image, Dimensions} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
-import {colors} from '../../utils/contants';
+import {colors, language} from '../../utils/contants';
 import Auth1 from '../../assets/images/auth/auth-1.png';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const {width} = Dimensions.get('window');
 
 export default class Auth extends React.Component {
+  state = {lang: null};
+
   gotoLogin = () => {
     const {navigation} = this.props;
     navigation.navigate('Login');
@@ -17,25 +20,34 @@ export default class Auth extends React.Component {
     const {navigation} = this.props;
     navigation.navigate('Register');
   }
+  
+  async componentDidMount() {
+    let lang = await AsyncStorage.getItem('language');
+    this.setState({lang});
+  }
 
   render() {
+    const {lang} = this.state;
+    if(!lang)
+      return false;
+
     return (
       <View style={styles.container}>
-        <StatusBar style="light" backgroundColor={colors.primary} />
+        <StatusBar style="dark" backgroundColor={colors.primary} />
         <View style={[styles.authScreen1, styles.centerFlex, styles.justifyBetween]}>
           <View style={[styles.centerFlex, styles.topBar, styles.flex, styles.padding50]}>
             <Image source={Auth1} />
           </View>
           <View style={[styles.centerFlex, styles.justifyBetween, styles.padding50]}>
             <View style={styles.auth}>
-              <Text style={styles.authText1}>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</Text>
+              <Text style={styles.authText1}>{language[lang].lorem20}</Text>
             </View>
             <View style={styles.flex}>
               <TouchableOpacity style={[styles.authBtn1, styles.centerFlex]} onPress={this.gotoRegister}>
-                <Text style={styles.authText}>Register</Text>
+                <Text style={styles.authText}>{language[lang].register}</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.authBtn1, styles.centerFlex]} onPress={this.gotoLogin}>
-                <Text style={styles.authText}>Login</Text>
+                <Text style={styles.authText}>{language[lang].login}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -81,14 +93,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 0.3,
     fontSize: 18,
-    lineHeight: 24,
+    lineHeight: 28,
     textAlign: 'center',
     fontFamily: 'Poppins_600SemiBold',
   },
   authText1: {
     fontSize: 24,
     letterSpacing: 0.3,
-    lineHeight: 28,
+    lineHeight: 30,
     marginBottom: 25,
     fontFamily: 'Poppins_400Regular',
   },

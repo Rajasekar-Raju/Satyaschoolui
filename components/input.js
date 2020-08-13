@@ -22,7 +22,7 @@ export default class Input extends React.Component {
         <View style={[styles.flex]}>
           <TextInput keyboardType={type} value={value} onChangeText={txt => onChange(name, txt)} placeholder={placeholder} style={[styles.textStyle, styles.inputText, styles.textMargin, {alignItems: 'center'}]} secureTextEntry={name === 'password' && !isVisible} editable={editable} />
         </View>
-        {name === 'password' && (
+        {name.toLowerCase().indexOf('password') !== -1 && (
           <TouchableOpacity onPress={this.toggleVisible} style={styles.textMargin}>
             <Image source={isVisible ? EyeSrike : Eye} />
           </TouchableOpacity>

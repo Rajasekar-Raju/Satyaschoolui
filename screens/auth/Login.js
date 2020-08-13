@@ -1,21 +1,34 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
-import { colors } from '../../utils/contants';
+import { colors, language } from '../../utils/contants';
 
 import Auth2 from '../../assets/images/auth/auth-2.png';
 import Phone from '../../assets/images/common/phone.png';
 import Password from '../../assets/images/common/password.png';
 import Input from '../../components/input';
+import AsyncStorage from '@react-native-community/async-storage';
 
 const {width} = Dimensions.get('window');
 
 export default class Login extends React.Component {
-  state = {phone: '', password: ''};
+  state = {phone: '', password: '', lang: null};
   
   handleChange = (name, text) => this.setState({[name]: text});
 
+  async componentDidMount() {
+    let lang = await AsyncStorage.getItem('language');
+    this.setState({lang});
+  }
+
+  goToApp = () => {
+    const {navigation} = this.props;
+    navigation.navigate('App');
+  }
+
   render() {
-    const {phone, password} = this.state;
+    const {phone, password, lang} = this.state;
+    if(lang === null)
+      return null;
 
     return (
       <View style={[styles.flex, styles.center, styles.container]}>
@@ -24,7 +37,7 @@ export default class Login extends React.Component {
         </View>
         <View style={{width: width-70}}>
           <View style={[styles.loginText]}>
-            <Text style={styles.textStyle}>Login</Text>
+            <Text style={styles.textStyle}>{language[lang].login}</Text>
           </View>
           <View>
             <View style={styles.loginText}>
@@ -33,8 +46,8 @@ export default class Login extends React.Component {
             <View style={styles.loginText}>
               <Input name="password" placeholder="◊◊◊◊◊◊◊◊◊" type="default" value={password} image={Password} onChange={this.handleChange} editable={true} />
             </View>
-            <TouchableOpacity style={[styles.loginText, styles.loginSubmit]}>
-              <Text style={[styles.textStyle, styles.loginSubmitText]}>Login</Text>
+            <TouchableOpacity style={[styles.loginText, styles.loginSubmit]} onPress={this.goToApp}>
+              <Text style={[styles.textStyle, styles.loginSubmitText]}>{language[lang].login}</Text>
             </TouchableOpacity>
           </View>
         </View>
