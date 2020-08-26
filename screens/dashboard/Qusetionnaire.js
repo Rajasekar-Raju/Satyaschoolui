@@ -1,5 +1,6 @@
 import React from 'react';
 import Swiper from 'react-native-swiper';
+// import Swiper from 'react-native-web-swiper';
 import { View, Text, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { colors, language } from '../../utils/contants';
@@ -9,11 +10,15 @@ import AsyncStorage from '@react-native-community/async-storage';
 export default class Questionnaire extends React.Component{
   state = {lang: null};
 
+  nextSlide = () => {
+    this.refs.swiper.scrollBy(1);
+  }
+
   renderSlides() {
     const {lang} = this.state;
     const questions = language[lang].questions;
     return questions.map(({options, question}, i) => (
-      <SlideItem key={`slide-${i}`} question={question} options={options} count={i + 1} />
+      <SlideItem key={`slide-${i}`} nextSlide={this.nextSlide} question={question} options={options} count={i + 1} />
     ))
   }
 
@@ -34,7 +39,7 @@ export default class Questionnaire extends React.Component{
         {/* <View style={styles.container}> */}
           {/* <Text style={styles.heading}>Questionnaire</Text> */}
         {/* </View> */}
-        <Swiper ref={'swiper'} showsButtons={false} showsPagination={false} loop={false}>
+        <Swiper ref={'swiper'} scrollEnabled={false} showsButtons={false} showsPagination={false} loop={false}>
           {this.renderSlides()}
         </Swiper>
         <View>

@@ -1,26 +1,52 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { NavigationContainer } from '@react-navigation/native';
+import { colors, language } from './utils/contants';
+import AsyncStorage from '@react-native-community/async-storage';
+import { Ionicons, Feather } from '@expo/vector-icons';
+
+import AnimatedTabBar from '@gorhom/animated-tabbar';
 
 import Onboarding from './screens/onboarding';
 import Auth from './screens/auth';
 import Login from './screens/auth/Login';
-import Register from './screens/auth/Register';
+// import Register from './screens/auth/Register';
 import Parent from './screens/auth/Parent';
-import Physician from './screens/auth/Physician';
+// import Physician from './screens/auth/Physician';
 import Waiting from './screens/auth/Waiting';
 import Success from './screens/auth/Success';
 import Failure from './screens/auth/Failure';
+import Lang from './screens/auth/Lang';
+import Home from './screens/dashboard/Home';
+import Settings from './screens/dashboard/Settings';
+import Chat from './screens/dashboard/Chat';
+import History from './screens/dashboard/History';
+import Questionnaire from './screens/dashboard/Qusetionnaire';
 
 import Left from './assets/images/common/left.png';
 
-import { createStackNavigator } from '@react-navigation/stack';
-import { NavigationContainer } from '@react-navigation/native';
-import { colors, language } from './utils/contants';
-import Questionnaire from './screens/dashboard/Qusetionnaire';
-import Lang from './screens/auth/Lang';
-import AsyncStorage from '@react-native-community/async-storage';
+const tabProps = {
+  labelStyle: {
+    color: '#5B37B7',
+  },
+  icon: {
+    component: () => <Ionicons name='md-checkmark-circle' size={32} color="green" />,
+    color: '#000',
+  },
+  ripple: {
+    color: '#FFC300',
+  },
+};
 
-const isFirst = true;
+const tabs = {
+  Home: {...tabProps, icon: {...tabProps.icon, component: ({animatedFocus, color, size}) => <Feather name='home' {...{size: 32, color}} />}},
+  History: {...tabProps, icon: {...tabProps.icon, component: ({animatedFocus, color, size}) => <Feather name='bell' {...{size: 32, color}} />}},
+  Questionnaire: {...tabProps, icon: {...tabProps.icon, component: ({animatedFocus, color, size}) => <Feather name='help-circle' {...{size: 32, color}} />}},
+  Chat: {...tabProps, icon: {...tabProps.icon, component: ({animatedFocus, color, size}) => <Feather name='message-square' {...{size: 32, color}} />}},
+  Settings: {...tabProps, icon: {...tabProps.icon, component: ({animatedFocus, color, size}) => <Feather name='settings' {...{size: 32, color}} />}},
+};
 
 const HeaderTitle = ({heading, subHeading}) => (
   <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
@@ -40,13 +66,14 @@ const HeaderLeft = ({onPress}) => (
 );
 
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
-const headerOptions = (heading, subHeading, lang) => {
+const headerOptions = (heading, subHeading, lang, isLeft, isRight) => {
   return {
     headerStyle: {elevation: 0, shadowOpacity: 0},
     headerTitle: () => <HeaderTitle heading={language[lang][`${heading}`]} subHeading={language[lang][`${subHeading}`]} />,
-    headerLeft: props => <HeaderLeft {...props} />,
-    headerRight: props => <View></View>
+    headerLeft: props => isLeft ? <HeaderLeft {...props} /> : null,
+    headerRight: props => isRight ? <View /> : null
   }
 }
 
@@ -67,12 +94,12 @@ class RegisterStack extends React.Component {
 
     return (
       <Stack.Navigator initialRouteName={'Register'}>
-        <Stack.Screen name='Register' component={Register} options={headerOptions('auth', 'register', lang)} />
-        <Stack.Screen name='Parent' component={Parent} options={headerOptions('auth', 'register', lang)} />
-        <Stack.Screen name='Physician' component={Physician} options={headerOptions('auth', 'register', lang)} />
-        <Stack.Screen name='Waiting' component={Waiting} options={headerOptions('auth', 'register', lang)} />
-        <Stack.Screen name='Success' component={Success} options={headerOptions('auth', 'register', lang)} />
-        <Stack.Screen name='Failure' component={Failure} options={headerOptions('auth', 'register', lang)} />
+        {/* <Stack.Screen name='Register' component={Register} options={headerOptions('auth', 'register', lang, 1, 0)} /> */}
+        <Stack.Screen name='Register' component={Parent} options={headerOptions('auth', 'register', lang, 1, 0)} />
+        {/* <Stack.Screen name='Physician' component={Physician} options={headerOptions('auth', 'register', lang, 1, 0)} /> */}
+        <Stack.Screen name='Waiting' component={Waiting} options={headerOptions('auth', 'register', lang, 1, 0)} />
+        <Stack.Screen name='Success' component={Success} options={headerOptions('auth', 'register', lang, 1, 0)} />
+        <Stack.Screen name='Failure' component={Failure} options={headerOptions('auth', 'register', lang, 1, 0)} />
       </Stack.Navigator>
     );
   }
@@ -96,7 +123,7 @@ class AuthStack extends React.Component {
     return (
       <Stack.Navigator initialRouteName={'Auth'}>
         <Stack.Screen name='Auth' component={Auth} initialParams={{rootRoute: route}} options={{headerShown: false}} />
-        <Stack.Screen name='Login' component={Login} initialParams={{rootRoute: route}} options={headerOptions('auth', 'login', lang)} />
+        <Stack.Screen name='Login' component={Login} initialParams={{rootRoute: route}} options={headerOptions('auth', 'login', lang, 1, 0)} />
         <Stack.Screen name='Register' component={RegisterStack} initialParams={{rootRoute: route}} options={{headerShown: false}} />
       </Stack.Navigator>
     );
@@ -126,13 +153,13 @@ class OnboardingStack extends React.Component {
     return (
       <Stack.Navigator initialRouteName={'Lang'}>
         <Stack.Screen name='Lang' component={Lang} initialParams={{rootRoute: route}} options={{headerShown: false}} />
-        <Stack.Screen name='Onboarding' component={Onboarding} initialParams={{rootRoute: route}} options={headerOptions('features', 'onboarding', lang)} />
+        <Stack.Screen name='Onboarding' component={Onboarding} initialParams={{rootRoute: route}} options={{headerShown: false}} />
       </Stack.Navigator>
     )
   }
 }
 
-class AppStack extends React.Component { 
+class QuestionnaireStack extends React.Component { 
   state = {lang: null};
 
   async componentDidMount() {
@@ -149,14 +176,134 @@ class AppStack extends React.Component {
 
     return (
       <Stack.Navigator initialRouteName={'Questionnaire'}>
-        <Stack.Screen name='Questionnaire' component={Questionnaire} initialParams={{rootRoute: route}} options={headerOptions('dashboard', 'questionnaire', lang)} />
+        <Stack.Screen name='Questionnaire' component={Questionnaire} options={headerOptions('dashboard', 'questionnaire', lang, 0, 0)} />
       </Stack.Navigator>
-    )
+    );
+  }
+}
+
+class HomeStack extends React.Component { 
+  state = {lang: null};
+
+  async componentDidMount() {
+    let lang = await AsyncStorage.getItem('language');
+    this.setState({lang});
+  }
+
+  render() { 
+    const {route} = this.props;
+    const {lang} = this.state;
+
+    if(lang === null)
+      return null;
+
+    return (
+      <Stack.Navigator initialRouteName={'Home'}>
+        <Stack.Screen name='Home' component={Home} options={{headerShown: false}} />
+      </Stack.Navigator>
+    );
+  }
+}
+
+class HistoryStack extends React.Component { 
+  state = {lang: null};
+
+  async componentDidMount() {
+    let lang = await AsyncStorage.getItem('language');
+    this.setState({lang});
+  }
+
+  render() { 
+    const {route} = this.props;
+    const {lang} = this.state;
+
+    if(lang === null)
+      return null;
+
+    return (
+      <Stack.Navigator initialRouteName={'History'}>
+        <Stack.Screen name='History' component={History} options={headerOptions('dashboard', 'history', lang, 0, 0)} />
+      </Stack.Navigator>
+    );
+  }
+}
+
+class ChatStack extends React.Component { 
+  state = {lang: null};
+
+  async componentDidMount() {
+    let lang = await AsyncStorage.getItem('language');
+    this.setState({lang});
+  }
+
+  render() { 
+    const {route} = this.props;
+    const {lang} = this.state;
+
+    if(lang === null)
+      return null;
+
+    return (
+      <Stack.Navigator initialRouteName={'Chat'}>
+        <Stack.Screen name='Chat' component={Chat} options={headerOptions('trust', 'chat', lang, 0, 0)} />
+        <Stack.Screen name='ChatPhysician' component={Chat} options={headerOptions('physician', 'chat', lang, 0, 1)} />
+      </Stack.Navigator>
+    );
+  }
+}
+
+class SettingsStack extends React.Component { 
+  state = {lang: null};
+
+  async componentDidMount() {
+    let lang = await AsyncStorage.getItem('language');
+    this.setState({lang});
+  }
+
+  render() { 
+    const {route} = this.props;
+    const {lang} = this.state;
+
+    if(lang === null)
+      return null;
+
+    return (
+      <Stack.Navigator initialRouteName={'Settings'}>
+        <Stack.Screen name='Settings' component={Settings} options={headerOptions('dashboard', 'settings', lang, 0, 0)} />
+      </Stack.Navigator>
+    );
+  }
+}
+
+class AppStack extends React.Component { 
+  state = {lang: 'en'};//null};
+
+  async componentDidMount() {
+    let lang = await AsyncStorage.getItem('language');
+    this.setState({lang});
+  }
+
+  render() {
+    const {route} = this.props;
+    const {lang} = this.state;
+
+    if(lang === null)
+      return null;
+
+    return (
+      <Tab.Navigator initialRouteName={'Chat'} tabBar={props => (<AnimatedTabBar animation={'iconOnly'} inactiveOpacity={0.25} inactiveScale={0.85} preset={'material'} tabs={tabs} {...props} />)}>
+        <Tab.Screen name='Home' component={HomeStack} initialParams={{rootRoute: route}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
+        <Tab.Screen name='History' component={HistoryStack} initialParams={{rootRoute: route}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
+        <Tab.Screen name='Questionnaire' component={QuestionnaireStack} initialParams={{rootRoute: route}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
+        <Tab.Screen name='Chat' component={ChatStack} initialParams={{rootRoute: route}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
+        <Tab.Screen name='Settings' component={SettingsStack} initialParams={{rootRoute: route}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
+      </Tab.Navigator>
+    );
   }
 }
 
 class Navigation extends React.Component {
-  state = {initScreen: 'Onboarding', lang: 'en'};
+  state = {initScreen: 'App', lang: 'en'};
 
   setLanguage = lang => {
     this.setState({lang});

@@ -1,19 +1,19 @@
 export const colors = {
   'primary': '#fbc341',
-  'white': '#fff',
+  'white': '#ffffff',
   'black': '#000000'
 };
 
 const options = [
   {name: 'Yes', value: 'yes'},
   {name: 'No', value: 'no'},
-  {name: 'Other', value: 'other'},
+  // {name: 'Other', value: 'other'},
 ];
 
 const taOptions = [
   {name: 'ஆம்', value: 'yes'},
   {name: 'இல்லை', value: 'no'},
-  {name: 'மற்றவை', value: 'other'},
+  // {name: 'மற்றவை', value: 'other'},
 ];
 
 export const language = {
@@ -59,6 +59,21 @@ export const language = {
     retypePassword: 'Retype Password',
     email: 'Email',
     specializedIn: 'Specialized In',
+    home: 'Home',
+    history: 'History',
+    upcomingNotifications: 'Upcoming Notifications',
+    noNotificaionsAvailable: 'No notifications available!',
+    profile: 'Profile',
+    company: 'Company',
+    app: 'App',
+    account: 'Account',
+    appointments: 'Appointments',
+    aboutUs: 'About Us',
+    faq: 'F.A.Q.',
+    termsConditions: 'Terms & Conditions',
+    privacyPolicies: 'Privacy Policies',
+    language: 'Language',
+    aboutApp: 'About App',
     questions: [
       {question: 'What are some good questions to ask?', options },
       {question: 'What are 10 questions to ask?', options },
@@ -110,6 +125,21 @@ export const language = {
     retypePassword: 'கடவுச்சொல்லை மீண்டும் தட்டச்சு செய்க',
     email: 'மின்னஞ்சல்',
     specializedIn: 'சிறப்பு',
+    home: 'வாசஸ்தலம்',
+    history: 'வரலாறு',
+    upcomingNotifications: 'வரவிருக்கும் அறிவிப்புகள்',
+    noNotificaionsAvailable: 'அறிவிப்புகள் எதுவும் கிடைக்கவில்லை!',
+    profile: 'சுயவிவரம்',
+    company: 'நிறுவனம்',
+    app: 'செயலி',
+    account: 'கணக்கு',
+    appointments: 'நியமனங்கள்',
+    aboutUs: 'எங்களை பற்றி',
+    faq: 'எஃப்.ஏ.கே.',
+    termsConditions: 'விதிமுறைகளும் நிபந்தனைகளும்',
+    privacyPolicies: 'தனியுரிமைக் கொள்கைகள்',
+    language: 'மொழி',
+    aboutApp: 'செயலி பற்றி',
     questions: [
       {question: 'கேட்க சில நல்ல கேள்விகள் யாவை?', options: taOptions },
       {question: 'கேட்க 10 கேள்விகள் யாவை?', options: taOptions },

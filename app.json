@@ -11,7 +11,7 @@
       "backgroundColor": "#fbc341"
     },
     "androidStatusBar": {
-      "backgroundColor": "#000",
+      "backgroundColor": "#fbc341",
       "translucent": false
     },
     "updates": {

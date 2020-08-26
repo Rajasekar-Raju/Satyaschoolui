@@ -3,25 +3,31 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Image } from 'rea
 import * as Speech from 'expo-speech';
 import AudioImg from '../../assets/images/questionnaire/audio.png';
 import { colors } from '../../utils/contants';
+import AsyncStorage from '@react-native-community/async-storage';
 
-const {width} = Dimensions.get('window');
+const {width, height} = Dimensions.get('window');
 
 export default class SlideItem extends React.Component {
   state = {btnDisabled: false};
 
-  renderOptions = (options) => options.map((option, i) => (
-    <TouchableOpacity key={`option-${i}`} style={styles.questionOptContainer}>
+  renderOptions = (options, nextSlide) => options.map((option, i) => (
+    <TouchableOpacity key={`option-${i}`} style={styles.questionOptContainer} onPress={nextSlide}>
       <Text style={styles.questionOptText}>{option.name}</Text>
     </TouchableOpacity>
   ));
   
-  speak = txt => Speech.speak(txt, {
-    onStart: () => this.setState({btnDisabled: true}),
-    onDone: () => this.setState({btnDisabled: false})
-  })
+  speak = async txt => {
+    let lang = await AsyncStorage.getItem('language');
+    this.setState({btnDisabled: true});
+    Speech.speak(txt, {
+      voice: lang === 'ta' ? 'ta-in-x-taf-network' : 'en-in-x-ahp-network',
+      language: lang === 'ta' ? 'ta-IN' : 'en-IN',
+      onDone: () => this.setState({btnDisabled: false})
+    });
+  }
 
   render() {
-    const {count, question, options} = this.props;
+    const {count, question, options, nextSlide} = this.props;
     const {btnDisabled} = this.state;
 
     return (
@@ -36,7 +42,7 @@ export default class SlideItem extends React.Component {
           </TouchableOpacity>
         </View>
         <View style={styles.optionsContainer}>
-          {this.renderOptions(options)}
+          {this.renderOptions(options, nextSlide)}
         </View>
       </View>
     );

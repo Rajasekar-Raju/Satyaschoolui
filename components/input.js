@@ -11,11 +11,11 @@ export default class Input extends React.Component {
   toggleVisible = () => this.setState({isVisible: !this.state.isVisible});
 
   render() {
-    const {type, name, value, placeholder, onChange, image, editable} = this.props;
+    const {type, name, value, placeholder, onChange, image, editable, style} = this.props;
     const {isVisible} = this.state;
 
     return (
-      <View style={[styles.flexRow, styles.center, styles.input]}>
+      <View style={[styles.flexRow, styles.center, styles.input, style]}>
         {image && (<View>
           <Image source={image} />
         </View>)}
