@@ -291,7 +291,7 @@ class AppStack extends React.Component {
       return null;
 
     return (
-      <Tab.Navigator initialRouteName={'Chat'} tabBar={props => (<AnimatedTabBar animation={'iconOnly'} inactiveOpacity={0.25} inactiveScale={0.85} preset={'material'} tabs={tabs} {...props} />)}>
+      <Tab.Navigator initialRouteName={'Home'} tabBar={props => (<AnimatedTabBar animation={'iconOnly'} inactiveOpacity={0.25} inactiveScale={0.85} preset={'material'} tabs={tabs} {...props} />)}>
         <Tab.Screen name='Home' component={HomeStack} initialParams={{rootRoute: route}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
         <Tab.Screen name='History' component={HistoryStack} initialParams={{rootRoute: route}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
         <Tab.Screen name='Questionnaire' component={QuestionnaireStack} initialParams={{rootRoute: route}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
@@ -303,7 +303,7 @@ class AppStack extends React.Component {
 }
 
 class Navigation extends React.Component {
-  state = {initScreen: 'App', lang: 'en'};
+  state = {initScreen: 'Onboarding', lang: 'en'};
 
   setLanguage = lang => {
     this.setState({lang});
