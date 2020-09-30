@@ -1,7 +1,9 @@
 export const colors = {
   'primary': '#fbc341',
   'white': '#ffffff',
-  'black': '#000000'
+  'black': '#000000',
+  'dander': '#f00000',
+  'success': '#00f055',
 };
 
 const options = [
@@ -44,7 +46,7 @@ export const language = {
     no: 'No',
     other: 'Other',
     trust: 'Trust',
-    waitForConfirmation: 'Wait for confirmation',
+    waitForConfirmation: 'Waiting for confirmation',
     alreadyRegistered: 'Already Registered',
     goBack: 'Go Back',
     goToLogin: 'Go to Login',
@@ -74,6 +76,11 @@ export const language = {
     privacyPolicies: 'Privacy Policies',
     language: 'Language',
     aboutApp: 'About App',
+    state: 'State',
+    city: 'City',
+    country: 'Country',
+    pincode: 'Pincode',
+    checkNow: 'Check Now',
     questions: [
       {question: 'What are some good questions to ask?', options },
       {question: 'What are 10 questions to ask?', options },
@@ -140,6 +147,11 @@ export const language = {
     privacyPolicies: 'தனியுரிமைக் கொள்கைகள்',
     language: 'மொழி',
     aboutApp: 'செயலி பற்றி',
+    state: 'மாநிலம்',
+    city: 'நகரம்',
+    country: 'நாடு',
+    pincode: 'அஞ்சல் குறியீடு',
+    checkNow: 'இப்போது சரிபார்க்க',
     questions: [
       {question: 'கேட்க சில நல்ல கேள்விகள் யாவை?', options: taOptions },
       {question: 'கேட்க 10 கேள்விகள் யாவை?', options: taOptions },

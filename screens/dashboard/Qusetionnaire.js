@@ -6,31 +6,36 @@ import { StatusBar } from 'expo-status-bar';
 import { colors, language } from '../../utils/contants';
 import SlideItem from './SlideItem';
 import AsyncStorage from '@react-native-community/async-storage';
+import { getAllQuestions } from '../../api';
 
 export default class Questionnaire extends React.Component{
-  state = {lang: null};
+  state = {lang: null, questions: []};
 
   nextSlide = () => {
     this.refs.swiper.scrollBy(1);
   }
 
   renderSlides() {
-    const {lang} = this.state;
-    const questions = language[lang].questions;
-    return questions.map(({options, question}, i) => (
-      <SlideItem key={`slide-${i}`} nextSlide={this.nextSlide} question={question} options={options} count={i + 1} />
-    ))
+    const {questions} = this.state;
+    const options = [
+      {name: 'Yes', value: 'yes'},
+      {name: 'No', value: 'no'},
+    ];
+    // const questions = language[lang].questions;
+    return questions.map(({questionDescription}, i) => (
+      <SlideItem key={`slide-${i}`} nextSlide={this.nextSlide} question={questionDescription} options={options} count={i + 1} />
+    ));
   }
 
   async componentDidMount() {
     let lang = await AsyncStorage.getItem('language');
-    this.setState({lang});
+    await getAllQuestions().then(questions => this.setState({lang, questions}))
   }
 
   render() {
-    const {lang} = this.state;
+    const {lang, questions} = this.state;
 
-    if(lang === null)
+    if(lang === null || language[lang] === undefined || questions.length === 0)
       return null;
 
     return (

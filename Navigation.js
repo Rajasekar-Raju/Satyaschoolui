@@ -60,9 +60,11 @@ const HeaderTitle = ({heading, subHeading}) => (
 );
 
 const HeaderLeft = ({onPress}) => (
-  <TouchableOpacity onPress={() => onPress()} style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-    <Image source={Left} />
-  </TouchableOpacity>
+  onPress ? 
+    (<TouchableOpacity onPress={() => onPress()} style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <Image source={Left} />
+    </TouchableOpacity>)
+    : <View />
 );
 
 const Stack = createStackNavigator();
@@ -73,7 +75,7 @@ const headerOptions = (heading, subHeading, lang, isLeft, isRight) => {
     headerStyle: {elevation: 0, shadowOpacity: 0},
     headerTitle: () => <HeaderTitle heading={language[lang][`${heading}`]} subHeading={language[lang][`${subHeading}`]} />,
     headerLeft: props => isLeft ? <HeaderLeft {...props} /> : null,
-    headerRight: props => isRight ? <View /> : null
+    headerRight: props => <View />
   }
 }
 
@@ -93,7 +95,7 @@ class RegisterStack extends React.Component {
       return null;
 
     return (
-      <Stack.Navigator initialRouteName={'Register'}>
+      <Stack.Navigator initialRouteName={'Register'} lazy={false}>
         {/* <Stack.Screen name='Register' component={Register} options={headerOptions('auth', 'register', lang, 1, 0)} /> */}
         <Stack.Screen name='Register' component={Parent} options={headerOptions('auth', 'register', lang, 1, 0)} />
         {/* <Stack.Screen name='Physician' component={Physician} options={headerOptions('auth', 'register', lang, 1, 0)} /> */}
@@ -121,7 +123,7 @@ class AuthStack extends React.Component {
       return null;
 
     return (
-      <Stack.Navigator initialRouteName={'Auth'}>
+      <Stack.Navigator initialRouteName={'Auth'} lazy={false}>
         <Stack.Screen name='Auth' component={Auth} initialParams={{rootRoute: route}} options={{headerShown: false}} />
         <Stack.Screen name='Login' component={Login} initialParams={{rootRoute: route}} options={headerOptions('auth', 'login', lang, 1, 0)} />
         <Stack.Screen name='Register' component={RegisterStack} initialParams={{rootRoute: route}} options={{headerShown: false}} />
@@ -151,7 +153,7 @@ class OnboardingStack extends React.Component {
       return null;
 
     return (
-      <Stack.Navigator initialRouteName={'Lang'}>
+      <Stack.Navigator initialRouteName={'Lang'} lazy={false}>
         <Stack.Screen name='Lang' component={Lang} initialParams={{rootRoute: route}} options={{headerShown: false}} />
         <Stack.Screen name='Onboarding' component={Onboarding} initialParams={{rootRoute: route}} options={{headerShown: false}} />
       </Stack.Navigator>
@@ -175,7 +177,7 @@ class QuestionnaireStack extends React.Component {
       return null;
 
     return (
-      <Stack.Navigator initialRouteName={'Questionnaire'}>
+      <Stack.Navigator initialRouteName={'Questionnaire'} lazy={false}>
         <Stack.Screen name='Questionnaire' component={Questionnaire} options={headerOptions('dashboard', 'questionnaire', lang, 0, 0)} />
       </Stack.Navigator>
     );
@@ -198,7 +200,7 @@ class HomeStack extends React.Component {
       return null;
 
     return (
-      <Stack.Navigator initialRouteName={'Home'}>
+      <Stack.Navigator initialRouteName={'Home'} lazy={false}>
         <Stack.Screen name='Home' component={Home} options={{headerShown: false}} />
       </Stack.Navigator>
     );
@@ -221,7 +223,7 @@ class HistoryStack extends React.Component {
       return null;
 
     return (
-      <Stack.Navigator initialRouteName={'History'}>
+      <Stack.Navigator initialRouteName={'History'} lazy={false}>
         <Stack.Screen name='History' component={History} options={headerOptions('dashboard', 'history', lang, 0, 0)} />
       </Stack.Navigator>
     );
@@ -244,7 +246,7 @@ class ChatStack extends React.Component {
       return null;
 
     return (
-      <Stack.Navigator initialRouteName={'Chat'}>
+      <Stack.Navigator initialRouteName={'Chat'} lazy={false}>
         <Stack.Screen name='Chat' component={Chat} options={headerOptions('trust', 'chat', lang, 0, 0)} />
         <Stack.Screen name='ChatPhysician' component={Chat} options={headerOptions('physician', 'chat', lang, 0, 1)} />
       </Stack.Navigator>
@@ -268,7 +270,7 @@ class SettingsStack extends React.Component {
       return null;
 
     return (
-      <Stack.Navigator initialRouteName={'Settings'}>
+      <Stack.Navigator initialRouteName={'Settings'} lazy={false}>
         <Stack.Screen name='Settings' component={Settings} options={headerOptions('dashboard', 'settings', lang, 0, 0)} />
       </Stack.Navigator>
     );
@@ -291,7 +293,7 @@ class AppStack extends React.Component {
       return null;
 
     return (
-      <Tab.Navigator initialRouteName={'Home'} tabBar={props => (<AnimatedTabBar animation={'iconOnly'} inactiveOpacity={0.25} inactiveScale={0.85} preset={'material'} tabs={tabs} {...props} />)}>
+      <Tab.Navigator initialRouteName={'Home'} tabBar={props => (<AnimatedTabBar animation={'iconOnly'} inactiveOpacity={0.25} inactiveScale={0.85} preset={'material'} tabs={tabs} {...props} />)} lazy={false}>
         <Tab.Screen name='Home' component={HomeStack} initialParams={{rootRoute: route}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
         <Tab.Screen name='History' component={HistoryStack} initialParams={{rootRoute: route}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
         <Tab.Screen name='Questionnaire' component={QuestionnaireStack} initialParams={{rootRoute: route}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
@@ -314,10 +316,10 @@ class Navigation extends React.Component {
 
     return (
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={initScreen}>
-          <Stack.Screen name="Onboarding" component={OnboardingStack} initialParams={{lang, setLanguage: this.setLanguage}} options={{headerShown: false}} />
-          <Stack.Screen name="Auth" component={AuthStack} initialParams={{lang, setLanguage: this.setLanguage}} options={{headerShown: false}} />
-          <Stack.Screen name="App" component={AppStack} initialParams={{lang, setLanguage: this.setLanguage}} options={{headerShown: false}} />
+        <Stack.Navigator initialRouteName={initScreen} lazy={false}>
+          <Stack.Screen name="Onboarding" component={OnboardingStack} initialParams={{lang, setLanguage: (lang) => this.setLanguage(lang)}} options={{headerShown: false}} />
+          <Stack.Screen name="Auth" component={AuthStack} initialParams={{lang, setLanguage: (lang) => this.setLanguage(lang)}} options={{headerShown: false}} />
+          <Stack.Screen name="App" component={AppStack} initialParams={{lang, setLanguage: (lang) => this.setLanguage(lang)}} options={{headerShown: false}} />
         </Stack.Navigator>
       </NavigationContainer>
     );

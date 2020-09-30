@@ -35,10 +35,10 @@ export default class Auth extends React.Component {
       <View style={styles.container}>
         <StatusBar style="dark" backgroundColor={colors.primary} />
         <View style={[styles.authScreen1, styles.centerFlex, styles.justifyBetween]}>
-          <View style={[styles.centerFlex, styles.topBar, styles.flex, styles.padding50]}>
+          <View style={[styles.centerFlex, styles.topBar, styles.padding50]}>
             <Image source={Auth1} />
           </View>
-          <View style={[styles.centerFlex, styles.justifyBetween, styles.padding50]}>
+          <View style={[styles.centerFlex, styles.flex, styles.justifyBetween, styles.padding50]}>
             <View style={styles.auth}>
               <Text style={styles.authText1}>{language[lang].lorem20}</Text>
             </View>
@@ -72,7 +72,8 @@ const styles = StyleSheet.create({
   },
   topBar: {
     marginTop: 100,
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    marginBottom: 50
   },
   justifyBetween: {
     flex: 1,
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
   authBtn1: {
     width: width - 100,
     marginTop: 5,
-    height: 40,
+    height: 50,
     borderRadius: 5,
     backgroundColor: colors.primary
   },

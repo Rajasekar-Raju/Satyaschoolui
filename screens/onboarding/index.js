@@ -17,9 +17,19 @@ export default class Onboarding extends React.Component {
     this.refs.swiper.scrollBy(1);
   }
 
-  gotoAuth = () =>{
+  gotoAuth = async () => {
     const {navigation} = this.props;
-    navigation.navigate('Auth');
+    let userId = await AsyncStorage.getItem('userId');
+    if(!userId)
+      navigation.navigate('Auth');
+    else {
+      navigation.navigate('Auth', {
+        screen: 'Register',
+        params: {
+          screen: 'Waiting'
+        }
+      });
+    }
   }
 
   async componentDidMount() {
