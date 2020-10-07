@@ -81,6 +81,7 @@ export const language = {
     country: 'Country',
     pincode: 'Pincode',
     checkNow: 'Check Now',
+    done: 'Done',
     questions: [
       {question: 'What are some good questions to ask?', options },
       {question: 'What are 10 questions to ask?', options },
@@ -152,6 +153,7 @@ export const language = {
     country: 'நாடு',
     pincode: 'அஞ்சல் குறியீடு',
     checkNow: 'இப்போது சரிபார்க்க',
+    done: 'முடிந்தது',
     questions: [
       {question: 'கேட்க சில நல்ல கேள்விகள் யாவை?', options: taOptions },
       {question: 'கேட்க 10 கேள்விகள் யாவை?', options: taOptions },

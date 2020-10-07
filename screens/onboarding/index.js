@@ -9,6 +9,7 @@ import Slide1 from './Slide1';
 import Slide2 from './Slide2';
 import Slide3 from './Slide3';
 import AsyncStorage from '@react-native-community/async-storage';
+import { getUserInfo } from '../../api';
 
 export default class Onboarding extends React.Component {
   state = {lang: null};
@@ -23,11 +24,21 @@ export default class Onboarding extends React.Component {
     if(!userId)
       navigation.navigate('Auth');
     else {
-      navigation.navigate('Auth', {
-        screen: 'Register',
-        params: {
-          screen: 'Waiting'
+      let screenToMove = 'Waiting';
+      await getUserInfo(userId).then(({userStatusId}) => {
+        if(userStatusId === 2) {
+          screenToMove = 'Success';
+        } else if (userStatusId === 3) {
+          screenToMove = 'Failure';
+        } else {
+          screenToMove = 'Waiting';
         }
+        navigation.navigate('Auth', {
+          screen: 'Register',
+          params: {
+            screen: screenToMove
+          }
+        });
       });
     }
   }

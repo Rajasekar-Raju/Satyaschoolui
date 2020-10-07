@@ -26,6 +26,7 @@ import History from './screens/dashboard/History';
 import Questionnaire from './screens/dashboard/Qusetionnaire';
 
 import Left from './assets/images/common/left.png';
+import { getUserInfo } from './api';
 
 const tabProps = {
   labelStyle: {
@@ -305,14 +306,27 @@ class AppStack extends React.Component {
 }
 
 class Navigation extends React.Component {
-  state = {initScreen: 'Onboarding', lang: 'en'};
+  state = {initScreen: null, lang: null};
 
   setLanguage = lang => {
     this.setState({lang});
   }
 
+  async componentDidMount() {
+    let langID = await AsyncStorage.getItem('language');
+    let isFirst = await AsyncStorage.getItem('isFirst');
+    let isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
+    let initScreen = !isFirst ? 'Onboarding' : !isLoggedIn ? 'Auth' : 'App';
+    this.setState({lang: langID, initScreen});
+    if(!isFirst)
+      await AsyncStorage.setItem('isFirst', '1');
+  }
+
   render() {
     const {initScreen, lang} = this.state;
+    
+    if(!lang || !initScreen)
+      return null;
 
     return (
       <NavigationContainer>

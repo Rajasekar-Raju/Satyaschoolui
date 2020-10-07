@@ -1,33 +1,84 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity, Alert } from 'react-native';
 import { colors, language } from '../../utils/contants';
 
 import Auth2 from '../../assets/images/auth/auth-2.png';
-import Phone from '../../assets/images/common/phone.png';
+import Email from '../../assets/images/common/mail.png';
 import Password from '../../assets/images/common/password.png';
 import Input from '../../components/input';
 import AsyncStorage from '@react-native-community/async-storage';
+import { getUserInfo, loginUser } from '../../api';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
 
 const {width} = Dimensions.get('window');
 
 export default class Login extends React.Component {
-  state = {phone: '', password: '', lang: null};
+  // state = {email: '', password: '', lang: null, isLoading: false};
+  state = {email: 'moaj257@gmail.com', password: '123456', lang: null, isLoading: false};
   
-  handleChange = (name, text) => this.setState({[name]: text});
+  // handleChange = (name, text) => this.setState({[name]: text});
 
   async componentDidMount() {
+    const {navigation} = this.props;
     let lang = await AsyncStorage.getItem('language');
+    let userId = await AsyncStorage.getItem('userId');
+    if(userId) {
+      let screenToMove = 'Waiting';
+      await getUserInfo(userId).then(({userStatusId}) => {
+        if(userStatusId === 2) {
+          screenToMove = 'Success';
+        } else if (userStatusId === 3) {
+          screenToMove = 'Failure';
+        } else {
+          screenToMove = 'Waiting';
+        }
+        navigation.navigate('Register', {
+          screen: screenToMove
+        });
+      });
+    }
     this.setState({lang});
   }
 
-  goToApp = () => {
+  login = async ({email, password}) => {
     const {navigation} = this.props;
-    navigation.navigate('App');
+    await loginUser({email, password})
+            .then(async ({code, data}) => {
+              if(parseInt(code) === 200 && data !== null) {
+                let dataJson = JSON.parse(data)[0];
+                const {UserId} = dataJson;
+                await AsyncStorage.setItem('userId', UserId.toString());
+                await AsyncStorage.setItem('type', 'login');
+                let screenToMove = 'Waiting';
+                await getUserInfo(UserId).then(({userStatusId}) => {
+                  if(userStatusId === 2) {
+                    screenToMove = 'Success';
+                  } else if (userStatusId === 3) {
+                    screenToMove = 'Failure';
+                  } else {
+                    screenToMove = 'Waiting';
+                  }
+                  navigation.navigate('Register', {
+                    screen: screenToMove
+                  });
+                });
+              } else {
+                Alert.alert('Error', 'Login failed!');
+              }
+            });
+    // navigation.navigate('App');
   }
 
   render() {
-    const {phone, password, lang} = this.state;
-    if(lang === null)
+    const {email, password, lang, isLoading} = this.state;
+    
+    let loginSchema = Yup.object().shape({
+      email: Yup.string().email().required(),
+      password: Yup.string().min(6).required(),
+    });
+
+    if(lang === null || language[lang] === undefined)
       return null;
 
     return (
@@ -39,17 +90,25 @@ export default class Login extends React.Component {
           <View style={[styles.loginText]}>
             <Text style={styles.textStyle}>{language[lang].login}</Text>
           </View>
-          <View>
-            <View style={styles.loginText}>
-              <Input name="phone" placeholder="986543210" type="phone-pad" value={phone} image={Phone} onChange={this.handleChange} editable={true} />
-            </View>
-            <View style={styles.loginText}>
-              <Input name="password" placeholder="◊◊◊◊◊◊◊◊◊" type="default" value={password} image={Password} onChange={this.handleChange} editable={true} />
-            </View>
-            <TouchableOpacity style={[styles.loginText, styles.loginSubmit]} onPress={this.goToApp}>
-              <Text style={[styles.textStyle, styles.loginSubmitText]}>{language[lang].login}</Text>
-            </TouchableOpacity>
-          </View>
+          <Formik
+          initialValues={{...{password, email}}}
+          validationSchema={loginSchema}
+          onSubmit={values => this.login(values)}
+          >
+            {({handleBlur, handleChange, handleSubmit, values, errors, touched}) => (
+              <View>
+                <View style={styles.loginText}>
+                  <Input name="email" placeholder="johndoe@gmail.com" type="email" value={values.email} touched={touched.email} error={errors.email} image={Email} onChange={handleChange('email')} onBlur={handleBlur('email')} editable={true} />
+                </View>
+                <View style={styles.loginText}>
+                  <Input name="password" placeholder="◊◊◊◊◊◊◊◊◊" type="default" value={values.password} touched={touched.password} error={errors.password} image={Password} onChange={handleChange('password')} onBlur={handleBlur('password')} editable={true} />
+                </View>
+                <TouchableOpacity style={[styles.loginText, styles.loginSubmit]} onPress={handleSubmit} disabled={isLoading}>
+                  <Text style={[styles.textStyle, styles.loginSubmitText]}>{language[lang].login}</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </Formik>
         </View>
       </View>
     )

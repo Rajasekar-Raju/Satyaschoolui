@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import {colors, language} from '../../utils/contants';
 import Auth1 from '../../assets/images/auth/auth-1.png';
 import AsyncStorage from '@react-native-community/async-storage';
+import { getUserInfo } from '../../api';
 
 const {width} = Dimensions.get('window');
 
@@ -22,7 +23,24 @@ export default class Auth extends React.Component {
   }
   
   async componentDidMount() {
+    const {navigation} = this.props;
     let lang = await AsyncStorage.getItem('language');
+    let userId = await AsyncStorage.getItem('userId');
+    if(userId) {
+      let screenToMove = 'Waiting';
+      await getUserInfo(userId).then(({userStatusId}) => {
+        if(userStatusId === 2) {
+          screenToMove = 'Success';
+        } else if (userStatusId === 3) {
+          screenToMove = 'Failure';
+        } else {
+          screenToMove = 'Waiting';
+        }
+        navigation.navigate('Register', {
+          screen: screenToMove
+        });
+      });
+    }
     this.setState({lang});
   }
 

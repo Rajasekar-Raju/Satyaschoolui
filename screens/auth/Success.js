@@ -12,11 +12,12 @@ export default class Success extends React.Component {
 
   handlePress = async () => {
     const {navigation} = this.props;
-    navigation.navigate('Login');
+    navigation.navigate('App');
   }
 
   async componentDidMount() {
     let lang = await AsyncStorage.getItem('language');
+    await AsyncStorage.setItem('isLoggedIn', '1');
     this.setState({lang});
   }
 
@@ -35,7 +36,7 @@ export default class Success extends React.Component {
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={this.handlePress} disabled={isLoading}>
-            <Text style={styles.buttonText}>{language[lang].goToLogin}</Text>
+            <Text style={styles.buttonText}>{language[lang].done}</Text>
           </TouchableOpacity>
         </View>
       </View>

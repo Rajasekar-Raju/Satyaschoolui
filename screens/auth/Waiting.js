@@ -31,6 +31,15 @@ export default class Waiting extends React.Component {
     let userId = await AsyncStorage.getItem('userId');
     if(!userId)
       navigation.navigate('Register');
+    else {
+      await getUserInfo(userId).then(({userStatusId}) => {
+        if(userStatusId === 2) {
+          navigation.navigate('Success');
+        } else if (userStatusId === 3) {
+          navigation.navigate('Failure');
+        }
+      });
+    }
     this.setState({lang});
   }
 

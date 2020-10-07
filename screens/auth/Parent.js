@@ -14,13 +14,13 @@ import Password from '../../assets/images/common/password.png';
 import Phone from '../../assets/images/common/phone.png';
 import TextImg from '../../assets/images/common/text.png';
 import Email from '../../assets/images/common/mail.png';
-import { registerUser } from '../../api';
+import { getUserInfo, registerUser } from '../../api';
 
 export default class Parent extends React.Component {
   state = {lang: '', firstName: '', lastName: '', babyName: '', babyDob: '', phoneNo: '', address: '', password: '', retypePassword: '', email: '', dob: '', city: '', state: '', country: '', pincode: '', isDobShow: false, isBDobShow: false, isLoading: false};
   // state = {lang: '', firstName: 'Mo', lastName: 'Aj', babyName: 'Baby Tara', babyDob: new Date('2020-09-30T06:41:58.166Z'), phoneNo: '9876543210', address: 'Test', password: '123456', retypePassword: '123456', email: 'moaj257@gmail.com', dob: new Date('2001-09-30T06:41:58.166Z'), city: 'Puducherry', state: 'Pondicherry', country: 'India', pincode: '605007', isDobShow: false, isBDobShow: false, isLoading: false};
 
-  handleChange = (name, text) => this.setState({[name]: text});
+  // handleChange = (name, text) => this.setState({[name]: text});
 
   onChange = (event, selectedDate, setFieldValue) => {
     const {isDobShow} = this.state;
@@ -58,9 +58,20 @@ export default class Parent extends React.Component {
       "CreatedBy":1,
       "UpdatedBy":1
     }
-    await registerUser(data).then(({userId}) => {
-      AsyncStorage.setItem('userId', userId.toString());
-      navigation.navigate('Waiting');
+    await registerUser(data).then(async ({userId}) => {
+      await AsyncStorage.setItem('userId', userId.toString());
+      await AsyncStorage.setItem('type', 'register');  
+      let screenToMove = 'Waiting';
+      await getUserInfo(userId).then(({userStatusId}) => {
+        if(userStatusId === 2) {
+          screenToMove = 'Success';
+        } else if (userStatusId === 3) {
+          screenToMove = 'Failure';
+        } else {
+          screenToMove = 'Waiting';
+        }
+        navigation.navigate(screenToMove);
+      });
     });
   }
 
@@ -68,8 +79,17 @@ export default class Parent extends React.Component {
     const {navigation} = this.props;
     let lang = await AsyncStorage.getItem('language');
     let userId = await AsyncStorage.getItem('userId');
-    if(userId)
-      navigation.navigate('Waiting');
+    if(userId) {
+      await getUserInfo(userId).then(({userStatusId}) => {
+        if(userStatusId === 2) {
+          navigation.navigate('Success');
+        } else if (userStatusId === 3) {
+          navigation.navigate('Failure');
+        } else {
+          navigation.navigate('Waiting');
+        }
+      });
+    }
     this.setState({lang});
   }
 
