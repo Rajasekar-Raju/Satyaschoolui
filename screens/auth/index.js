@@ -21,6 +21,11 @@ export default class Auth extends React.Component {
     const {navigation} = this.props;
     navigation.navigate('Register');
   }
+
+  gotoQuestionnaire = () => {
+    const {navigation} = this.props;
+    navigation.navigate('Questionnaire');
+  }
   
   async componentDidMount() {
     const {navigation} = this.props;
@@ -66,6 +71,9 @@ export default class Auth extends React.Component {
               </TouchableOpacity>
               <TouchableOpacity style={[styles.authBtn1, styles.centerFlex]} onPress={this.gotoLogin}>
                 <Text style={styles.authText}>{language[lang].login}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.authBtn1, styles.centerFlex]} onPress={this.gotoQuestionnaire}>
+                <Text style={styles.authText}>{language[lang].visitors}</Text>
               </TouchableOpacity>
             </View>
           </View>

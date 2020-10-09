@@ -6,13 +6,13 @@ export const colors = {
   'success': '#00f055',
 };
 
-const options = [
+export const options = [
   {name: 'Yes', value: 'yes'},
   {name: 'No', value: 'no'},
   // {name: 'Other', value: 'other'},
 ];
 
-const taOptions = [
+export const taOptions = [
   {name: 'ஆம்', value: 'yes'},
   {name: 'இல்லை', value: 'no'},
   // {name: 'மற்றவை', value: 'other'},
@@ -82,6 +82,7 @@ export const language = {
     pincode: 'Pincode',
     checkNow: 'Check Now',
     done: 'Done',
+    visitors: 'Visitors',
     questions: [
       {question: 'What are some good questions to ask?', options },
       {question: 'What are 10 questions to ask?', options },
@@ -154,6 +155,7 @@ export const language = {
     pincode: 'அஞ்சல் குறியீடு',
     checkNow: 'இப்போது சரிபார்க்க',
     done: 'முடிந்தது',
+    visitors: 'பார்வையாளர்கள்',
     questions: [
       {question: 'கேட்க சில நல்ல கேள்விகள் யாவை?', options: taOptions },
       {question: 'கேட்க 10 கேள்விகள் யாவை?', options: taOptions },

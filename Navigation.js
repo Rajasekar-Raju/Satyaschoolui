@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { colors, language } from './utils/contants';
+import { colors, language, options, taOptions } from './utils/contants';
 import AsyncStorage from '@react-native-community/async-storage';
 import { Ionicons, Feather } from '@expo/vector-icons';
 
@@ -128,6 +128,7 @@ class AuthStack extends React.Component {
         <Stack.Screen name='Auth' component={Auth} initialParams={{rootRoute: route}} options={{headerShown: false}} />
         <Stack.Screen name='Login' component={Login} initialParams={{rootRoute: route}} options={headerOptions('auth', 'login', lang, 1, 0)} />
         <Stack.Screen name='Register' component={RegisterStack} initialParams={{rootRoute: route}} options={{headerShown: false}} />
+        <Stack.Screen name='Questionnaire' component={Questionnaire} initialParams={{options: []}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
       </Stack.Navigator>
     );
   }
@@ -179,7 +180,7 @@ class QuestionnaireStack extends React.Component {
 
     return (
       <Stack.Navigator initialRouteName={'Questionnaire'} lazy={false}>
-        <Stack.Screen name='Questionnaire' component={Questionnaire} options={headerOptions('dashboard', 'questionnaire', lang, 0, 0)} />
+        <Stack.Screen name='Questionnaire' component={Questionnaire} initialParams={{options: lang === 'ta' ? taOptions : options}} options={headerOptions('dashboard', 'questionnaire', lang, 0, 0)} />
       </Stack.Navigator>
     );
   }
@@ -317,6 +318,7 @@ class Navigation extends React.Component {
     let isFirst = await AsyncStorage.getItem('isFirst');
     let isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
     let initScreen = !isFirst ? 'Onboarding' : !isLoggedIn ? 'Auth' : 'App';
+    // initScreen = 'App';
     this.setState({lang: langID, initScreen});
     if(!isFirst)
       await AsyncStorage.setItem('isFirst', '1');
