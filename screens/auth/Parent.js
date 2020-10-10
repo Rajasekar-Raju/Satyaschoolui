@@ -145,10 +145,10 @@ export default class Parent extends React.Component {
                     <Input name="babyName" placeholder="" type="default" image={TextImg} touched={touched.babyName} error={errors.babyName} value={values.babyName} onChange={handleChange('babyName')} onBlur={handleBlur('babyName')} editable={true} />
                   </View>
                   <View style={[styles.innerItemContainerRight, styles.scrollContainer]}>
-                    <View>
+                    <TouchableOpacity onPress={() => this.setState({isBDobShow: true})}>
                       <Text style={styles.labelText}>{language[lang].babyDob}</Text>
                       <Input name="babyDob" placeholder="" type="default" image={Calendar} touched={touched.babyDob} error={errors.babyDob} value={values.babyDob} onChange={handleChange('babyDob')} onBlur={handleBlur('babyDob')} editable={false} />
-                    <View>
+                    </TouchableOpacity>
                   </View>
                 </View>
                 <View style={styles.itemContainer}>
