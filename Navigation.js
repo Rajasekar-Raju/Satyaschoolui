@@ -321,7 +321,7 @@ class Navigation extends React.Component {
     let isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
     // console.log(!isFirst, 'isFirst');
     let initScreen = !isFirst ? 'Onboarding' : !isLoggedIn ? 'Auth' : 'App';
-    // console.log(initScreen, 'initScreen');
+    // console.log(initScreen, 'initScreen');//
     if(!langID)
       this.setLanguage('en');
     this.setState({lang: langID !== null ? langID : 'en', initScreen});
