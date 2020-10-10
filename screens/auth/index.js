@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, TouchableOpacity, Text, StyleSheet, Image, Dimensions} from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet, Image, Dimensions, ScrollView} from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 import {colors, language} from '../../utils/contants';
@@ -57,15 +57,15 @@ export default class Auth extends React.Component {
     return (
       <View style={styles.container}>
         <StatusBar style="dark" backgroundColor={colors.primary} />
-        <View style={[styles.authScreen1, styles.centerFlex, styles.justifyBetween]}>
-          <View style={[styles.centerFlex, styles.topBar, styles.padding50]}>
-            <Image source={Auth1} />
+        <ScrollView style={styles.flex} contentContainerStyle={[styles.centerFlex, styles.justifyBetween]}>
+          <View style={[styles.centerFlex, styles.topBar, styles.padding50, {width: width - 100}]}>
+            <Image source={Auth1} resizeMode='contain' />
           </View>
-          <View style={[styles.centerFlex, styles.flex, styles.justifyBetween, styles.padding50]}>
-            <View style={styles.auth}>
+          <View style={[styles.centerFlex, styles.flex, styles.justifyBetween]}>
+            <View style={[styles.auth, styles.padding50]}>
               <Text style={styles.authText1}>{language[lang].lorem20}</Text>
             </View>
-            <View style={styles.flex}>
+            <View style={[{flex: 1}, styles.padding50]}>
               <TouchableOpacity style={[styles.authBtn1, styles.centerFlex]} onPress={this.gotoRegister}>
                 <Text style={styles.authText}>{language[lang].register}</Text>
               </TouchableOpacity>
@@ -77,7 +77,7 @@ export default class Auth extends React.Component {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
+        </ScrollView>
       </View>
     )
   }
@@ -102,7 +102,6 @@ const styles = StyleSheet.create({
     marginBottom: 50
   },
   justifyBetween: {
-    flex: 1,
     justifyContent: 'space-between'
   },
   centerFlex: {
@@ -136,7 +135,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     height: 50,
     borderRadius: 5,
-    backgroundColor: colors.primary
+    backgroundColor: colors.primary,
   },
   auth: {
     marginVertical: 20
