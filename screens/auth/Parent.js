@@ -17,21 +17,16 @@ import Email from '../../assets/images/common/mail.png';
 import { getUserInfo, registerUser } from '../../api';
 
 export default class Parent extends React.Component {
-  state = {lang: '', firstName: '', lastName: '', babyName: '', babyDob: '', phoneNo: '', address: '', password: '', retypePassword: '', email: '', dob: '', city: '', state: '', country: '', pincode: '', isDobShow: false, isBDobShow: false, isLoading: false};
-  // state = {lang: '', firstName: 'Mo', lastName: 'Aj', babyName: 'Baby Tara', babyDob: new Date('2020-09-30T06:41:58.166Z'), phoneNo: '9876543210', address: 'Test', password: '123456', retypePassword: '123456', email: 'moaj257@gmail.com', dob: new Date('2001-09-30T06:41:58.166Z'), city: 'Puducherry', state: 'Pondicherry', country: 'India', pincode: '605007', isDobShow: false, isBDobShow: false, isLoading: false};
+  state = {lang: '', firstName: '', lastName: '', babyName: '', babyDob: '', phoneNo: '', address: '', password: '', retypePassword: '', email: '', city: '', state: '', country: '', pincode: '', isDobShow: false, isBDobShow: false, isLoading: false};
+  // state = {lang: '', firstName: 'Mo', lastName: 'Aj', babyName: 'Baby Tara', babyDob: new Date('2020-09-30T06:41:58.166Z'), phoneNo: '9876543210', address: 'Test', password: '123456', retypePassword: '123456', email: 'moaj257@gmail.com', city: 'Puducherry', state: 'Pondicherry', country: 'India', pincode: '605007', isDobShow: false, isBDobShow: false, isLoading: false};
 
   // handleChange = (name, text) => this.setState({[name]: text});
 
   onChange = (event, selectedDate, setFieldValue) => {
-    const {isDobShow} = this.state;
+    // const {isDobShow} = this.state;
     const currentDate = selectedDate || '';
-    if(isDobShow){
-      this.setState({dob: currentDate, isDobShow: false, isBDobShow: false});
-      setFieldValue('dob', currentDate);
-    } else {
-      this.setState({babyDob: currentDate, isDobShow: false, isBDobShow: false});
-      setFieldValue('babyDob', currentDate);
-    }
+    this.setState({babyDob: currentDate, isDobShow: false, isBDobShow: false});
+    setFieldValue('babyDob', currentDate);
   };
 
   register = async ({firstName, lastName, babyName, dob, babyDob, phoneNo, address, password, email, state, city, country, pincode}) => {
@@ -43,7 +38,7 @@ export default class Parent extends React.Component {
       "Image": null,
       "ChildName": babyName,
       "ChildDob": babyDob,
-      "Dob": dob,
+      "Dob": '',
       "password": password,
       "UserCategoryId":3,
       "UserStatusId": 1,
@@ -94,11 +89,11 @@ export default class Parent extends React.Component {
   }
 
   render() {
-    const {firstName, lastName, babyName, babyDob, phoneNo, address, lang, password, retypePassword, email, dob, city, state, country, pincode, isDobShow, isBDobShow, isLoading} = this.state;
+    const {firstName, lastName, babyName, babyDob, phoneNo, address, lang, password, retypePassword, email, city, state, country, pincode, isDobShow, isBDobShow, isLoading} = this.state;
     const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
-    let parentsDate = new Date();
-    var pastYear = parentsDate.getFullYear() - 18;
-    parentsDate.setFullYear(pastYear);
+    // let parentsDate = new Date();
+    // var pastYear = parentsDate.getFullYear() - 18;
+    // parentsDate.setFullYear(pastYear);
 
     let registerSchema = Yup.object().shape({
       firstName: Yup.string().min(2).max(20).required(),
@@ -110,7 +105,6 @@ export default class Parent extends React.Component {
       password: Yup.string().min(6).required(),
       retypePassword: Yup.string().oneOf([Yup.ref('password'), null]).required(),
       email: Yup.string().email().required(),
-      dob: Yup.date().max(parentsDate).required(),
       city: Yup.string().min(2).required(),
       state: Yup.string().min(2).required(),
       country: Yup.string().min(2).required(),
@@ -123,7 +117,7 @@ export default class Parent extends React.Component {
     return (
       <View style={styles.container}>
         <Formik
-          initialValues={{...{firstName, lastName, babyName, babyDob, phoneNo, address, lang, password, retypePassword, email, dob, city, state, country, pincode}}}
+          initialValues={{...{firstName, lastName, babyName, babyDob, phoneNo, address, lang, password, retypePassword, email, city, state, country, pincode}}}
           validationSchema={registerSchema}
           onSubmit={values => this.register(values)}
           >
@@ -141,20 +135,20 @@ export default class Parent extends React.Component {
                     <Input name="lastName" placeholder="" type="default" image={TextImg} touched={touched.lastName} error={errors.lastName} value={values.lastName} onChange={handleChange('lastName')} onBlur={handleBlur('lastName')} editable={true} />
                   </View>
                 </View>
-                <TouchableOpacity style={[styles.itemContainer]} onPress={() => this.setState({isDobShow: true})}>
+                {/* <TouchableOpacity style={[styles.itemContainer]} onPress={() => this.setState({isDobShow: true})}>
                   <Text style={styles.labelText}>{language[lang].dob}</Text>
                   <Input name="dob" placeholder="" type="default" image={Calendar} touched={touched.dob} error={errors.dob} value={values.dob} onChange={handleChange('dob')} onBlur={handleBlur('dob')} editable={false} />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <View style={[styles.itemContainer, styles.twoItemsContainer]}>
                   <View style={[styles.innerItemContainerLeft, styles.scrollContainer]}>
                     <Text style={styles.labelText}>{language[lang].babyName}</Text>
                     <Input name="babyName" placeholder="" type="default" image={TextImg} touched={touched.babyName} error={errors.babyName} value={values.babyName} onChange={handleChange('babyName')} onBlur={handleBlur('babyName')} editable={true} />
                   </View>
                   <View style={[styles.innerItemContainerRight, styles.scrollContainer]}>
-                    <TouchableOpacity onPress={() => this.setState({isBDobShow: true})}>
+                    <View>
                       <Text style={styles.labelText}>{language[lang].babyDob}</Text>
                       <Input name="babyDob" placeholder="" type="default" image={Calendar} touched={touched.babyDob} error={errors.babyDob} value={values.babyDob} onChange={handleChange('babyDob')} onBlur={handleBlur('babyDob')} editable={false} />
-                    </TouchableOpacity>
+                    <View>
                   </View>
                 </View>
                 <View style={styles.itemContainer}>
