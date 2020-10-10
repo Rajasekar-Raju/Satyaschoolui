@@ -24,7 +24,7 @@ export default class Auth extends React.Component {
 
   gotoQuestionnaire = () => {
     const {navigation} = this.props;
-    navigation.navigate('Questionnaire');
+    navigation.navigate('QuestionnaireVisitor');
   }
   
   async componentDidMount() {
@@ -52,7 +52,7 @@ export default class Auth extends React.Component {
   render() {
     const {lang} = this.state;
     if(!lang)
-      return false;
+      return null;
 
     return (
       <View style={styles.container}>

@@ -9,8 +9,7 @@ const {width} = Dimensions.get('window');
 export default class Lang extends Component {
   handleClick = async (langID, setLanguage) => {
     const {navigation} = this.props;
-    await AsyncStorage.setItem('language', langID);
-    setLanguage(langID);
+    await setLanguage(langID);
     navigation.navigate('Onboarding');
   };
 

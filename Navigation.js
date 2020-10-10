@@ -128,7 +128,7 @@ class AuthStack extends React.Component {
         <Stack.Screen name='Auth' component={Auth} initialParams={{rootRoute: route}} options={{headerShown: false}} />
         <Stack.Screen name='Login' component={Login} initialParams={{rootRoute: route}} options={headerOptions('auth', 'login', lang, 1, 0)} />
         <Stack.Screen name='Register' component={RegisterStack} initialParams={{rootRoute: route}} options={{headerShown: false}} />
-        <Stack.Screen name='Questionnaire' component={Questionnaire} initialParams={{options: []}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
+        <Stack.Screen name='QuestionnaireVisitor' component={Questionnaire} initialParams={{options: []}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
       </Stack.Navigator>
     );
   }
@@ -309,33 +309,37 @@ class AppStack extends React.Component {
 class Navigation extends React.Component {
   state = {initScreen: null, lang: null};
 
-  setLanguage = lang => {
+  setLanguage = async lang => {
+    await AsyncStorage.setItem('language', lang);
     this.setState({lang});
   }
 
   async componentDidMount() {
+    // await AsyncStorage.clear();
     let langID = await AsyncStorage.getItem('language');
     let isFirst = await AsyncStorage.getItem('isFirst');
     let isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
+    // console.log(!isFirst, 'isFirst');
     let initScreen = !isFirst ? 'Onboarding' : !isLoggedIn ? 'Auth' : 'App';
-    // initScreen = 'App';
-    this.setState({lang: langID, initScreen});
+    // console.log(initScreen, 'initScreen');
+    if(!langID)
+      this.setLanguage('en');
+    this.setState({lang: langID !== null ? langID : 'en', initScreen});
     if(!isFirst)
       await AsyncStorage.setItem('isFirst', '1');
   }
 
   render() {
     const {initScreen, lang} = this.state;
-    
     if(!lang || !initScreen)
       return null;
 
     return (
       <NavigationContainer>
         <Stack.Navigator initialRouteName={initScreen} lazy={false}>
-          <Stack.Screen name="Onboarding" component={OnboardingStack} initialParams={{lang, setLanguage: (lang) => this.setLanguage(lang)}} options={{headerShown: false}} />
-          <Stack.Screen name="Auth" component={AuthStack} initialParams={{lang, setLanguage: (lang) => this.setLanguage(lang)}} options={{headerShown: false}} />
-          <Stack.Screen name="App" component={AppStack} initialParams={{lang, setLanguage: (lang) => this.setLanguage(lang)}} options={{headerShown: false}} />
+          <Stack.Screen name="Onboarding" component={OnboardingStack} initialParams={{lang, setLanguage: this.setLanguage}} options={{headerShown: false}} />
+          <Stack.Screen name="Auth" component={AuthStack} initialParams={{lang, setLanguage: this.setLanguage}} options={{headerShown: false}} />
+          <Stack.Screen name="App" component={AppStack} initialParams={{lang, setLanguage: this.setLanguage}} options={{headerShown: false}} />
         </Stack.Navigator>
       </NavigationContainer>
     );
