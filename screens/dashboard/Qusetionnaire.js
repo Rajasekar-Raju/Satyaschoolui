@@ -6,7 +6,8 @@ import { StatusBar } from 'expo-status-bar';
 import { colors, language } from '../../utils/contants';
 import SlideItem from './SlideItem';
 import AsyncStorage from '@react-native-community/async-storage';
-import { getAllQuestions } from '../../api';
+import { getAllQuestions, getMileStoneQuestions } from '../../api';
+import { toDays } from '../../utils/functions';
 
 
 // const options = [
@@ -15,7 +16,7 @@ import { getAllQuestions } from '../../api';
 // ];
 
 export default class Questionnaire extends React.Component{
-  state = {lang: null, questions: [], isLoading: true};
+  state = {lang: null, questions: [], isLoading: true, isQuestionsAnwered: false};
 
   nextSlide = () => {
     this.refs.swiper.scrollBy(1);
@@ -25,24 +26,33 @@ export default class Questionnaire extends React.Component{
     const {questions} = this.state;
     const {route} = this.props;
     const {params} = route;
-    const {options} = params;
-    // const questions = language[lang].questions;
-    return questions.map(({questionDescription}, i) => (
-      <SlideItem key={`slide-${i}`} nextSlide={this.nextSlide} question={questionDescription} options={options} count={i + 1} />
+    const {options, isMileStone} = params;
+    return questions.map(({questionDescription, QuestionId}, i) => (
+      <SlideItem key={`slide-${i}`} nextSlide={this.nextSlide} question={questionDescription} isLast={questions.length - 1 === i && isMileStone} questionId={QuestionId} options={options} count={i + 1} />
     ));
   }
 
   async componentDidMount() {
-    // console.log(this.props);
+    const {route} = this.props;
+    const {params} = route;
+    const {isMileStone} = params;
     let lang = await AsyncStorage.getItem('language');
-    await getAllQuestions().then(questions => this.setState({lang, questions, isLoading: false}))
+    let babyDob = await AsyncStorage.getItem('babyDob');
+    let isQuestionsAnwered = await AsyncStorage.getItem('isAnswered');
+    let daysDiff = toDays(new Date(babyDob), new Date());
+    let mileStoneFinder = Math.floor((daysDiff / 365) / 2);
+    let mileStoneId = mileStoneFinder > 3 ? 3 : mileStoneFinder < 1 ? 1 : mileStoneFinder;
+    if(isMileStone)
+      await getMileStoneQuestions(mileStoneId).then(({data}) => this.setState({lang, questions: JSON.parse(data), isLoading: false, isQuestionsAnwered}));
+    else
+      await getAllQuestions().then(questions => this.setState({lang, questions, isLoading: false, isQuestionsAnwered}));
   }
 
   render() {
-    const {lang, questions, isLoading} = this.state;
+    const {lang, questions, isLoading, isQuestionsAnwered} = this.state;
     const {route} = this.props;
     const {params} = route;
-    const {options} = params;
+    const {options, isMileStone} = params;
 
     if(isLoading){
       return (
@@ -61,7 +71,7 @@ export default class Questionnaire extends React.Component{
         {/* <View style={styles.container}> */}
           {/* <Text style={styles.heading}>Questionnaire</Text> */}
         {/* </View> */}
-        <Swiper ref={'swiper'} scrollEnabled={options.length > 0 ? false : true} showsButtons={false} showsPagination={options.length > 0 ? false : true} loop={false} activeDotColor={colors.primary} dotColor={`${colors.primary}70`}>
+        <Swiper ref={'swiper'} scrollEnabled={!isMileStone && !isQuestionsAnwered ? false : true} showsButtons={false} showsPagination={options.length > 0 ? false : true} loop={false} activeDotColor={colors.primary} dotColor={`${colors.primary}70`}>
           {this.renderSlides()}
         </Swiper>
         <View>

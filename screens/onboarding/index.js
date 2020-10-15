@@ -24,22 +24,23 @@ export default class Onboarding extends React.Component {
     if(!userId)
       navigation.navigate('Auth');
     else {
-      let screenToMove = 'Waiting';
-      await getUserInfo(userId).then(({userStatusId}) => {
-        if(userStatusId === 2) {
-          screenToMove = 'Success';
-        } else if (userStatusId === 3) {
-          screenToMove = 'Failure';
-        } else {
-          screenToMove = 'Waiting';
-        }
-        navigation.navigate('Auth', {
-          screen: 'Register',
-          params: {
-            screen: screenToMove
-          }
-        });
-      });
+      navigation.navigate('App');
+      // let screenToMove = 'Waiting';
+      // await getUserInfo(userId).then(({userStatusId}) => {
+      //   if(userStatusId === 2) {
+      //     screenToMove = 'Success';
+      //   } else if (userStatusId === 3) {
+      //     screenToMove = 'Failure';
+      //   } else {
+      //     screenToMove = 'Waiting';
+      //   }
+      //   navigation.navigate('Auth', {
+      //     screen: 'Register',
+      //     params: {
+      //       screen: screenToMove
+      //     }
+      //   });
+      // });
     }
   }
 

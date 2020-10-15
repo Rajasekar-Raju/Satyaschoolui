@@ -4,10 +4,11 @@ import AsyncStorage from '@react-native-community/async-storage';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { colors } from '../../utils/contants';
 import Notifications from '../../components/Notifications';
+import { getUserAnswers } from '../../api';
 
-const answered = 8;
-const total = 12;
-const average = Math.round((answered/total) * 100);
+// const answered = 8;
+// const total = 12;
+// const average = Math.round((answered/total) * 100);
 
 const notifications = [
   {name: 'Notification 1', desc: 'Notification 1 Description'},
@@ -16,14 +17,14 @@ const notifications = [
 ];
 
 export default class Home extends React.Component{
-  state = {lang: null};
+  state = {lang: null, userName: null, total: 0, average: 0, answered: 0};
 
-  renderHeader = () => (
+  renderHeader = (userName, average, total, answered) => (
     <View style={styles.headerContainer}>
       <View style={styles.headerInnerContainer}>
         <View style={styles.headerRow}>
           <View style={styles.rowFlex}>
-            <Text numberOfLines={1} style={styles.headerRowTitle}>Hello, Sathya</Text>
+            <Text numberOfLines={1} style={styles.headerRowTitle}>Hello, {userName}</Text>
             <Text numberOfLines={2} style={styles.headerRowDesc}>Let's make this simple.</Text>
           </View>
           <Image source={require('../../assets/images/chats/user.png')} style={styles.profileImg} />
@@ -31,31 +32,47 @@ export default class Home extends React.Component{
         <View style={styles.headerCard}>
           <View style={styles.headerCardLeft}>
             <AnimatedCircularProgress size={75} width={15} fill={average} tintColor={colors.white} onAnimationComplete={() => console.log('onAnimationComplete')} backgroundColor={`${colors.white}50`}>
-              {fill => <Text style={styles.headerCardLeftText}>{answered}/{total}</Text>}
+              {fill => <Text style={styles.headerCardLeftText}>{answered.length}/{total.length}</Text>}
             </AnimatedCircularProgress>
-            {/* <Text style={styles.headerCardLeftText}>{answered}/{total}</Text> */}
           </View>
           <View style={styles.headerCardRight}>
-            <Text style={styles.headerCardRightText}>You have answered {answered} out of {total} questions.</Text>
+            <Text style={styles.headerCardRightText}>You have {answered.length} risks out of {total.length} questions.</Text>
           </View>
         </View>
       </View>
     </View>
-  )
+  );
+
+  updateRiskCircle = async () => {
+    let userId = await AsyncStorage.getItem('userId');
+    await getUserAnswers(userId)
+                .then(({data}) => {
+                  let total = JSON.parse(data);
+                  let answered = total.filter(data => data.AnsDescription === 'yes');
+                  let average = Math.round((answered.length/total.length) * 100);
+                  this.setState({total, answered, average});
+                });
+  }
 
   async componentDidMount() {
     let langID = await AsyncStorage.getItem('language');
-    this.setState({lang: langID});
+    let userName = await AsyncStorage.getItem('userName');
+    await this.updateRiskCircle();
+    this.setState({lang: langID, userName});
+  }
+
+  async componentDidUpdate() {
+    await this.updateRiskCircle();
   }
 
   render() {
-    const {lang} = this.state;
+    const {lang, userName, average, total, answered} = this.state;
     if(!lang)
       return null;
 
     return (
       <View style={styles.container}>
-        {this.renderHeader()}
+        {this.renderHeader(userName, average, total, answered)}
         <ScrollView style={styles.scrollview}>
           <Notifications {...{notifications, heading: 1, lang}} />
         </ScrollView>

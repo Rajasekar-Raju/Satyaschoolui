@@ -75,7 +75,7 @@ const headerOptions = (heading, subHeading, lang, isLeft, isRight) => {
   return {
     headerStyle: {elevation: 0, shadowOpacity: 0},
     headerTitle: () => <HeaderTitle heading={language[lang][`${heading}`]} subHeading={language[lang][`${subHeading}`]} />,
-    headerLeft: props => isLeft ? <HeaderLeft {...props} /> : null,
+    headerLeft: props => isLeft ? <HeaderLeft {...props} /> : <View />,
     headerRight: props => <View />
   }
 }
@@ -100,9 +100,9 @@ class RegisterStack extends React.Component {
         {/* <Stack.Screen name='Register' component={Register} options={headerOptions('auth', 'register', lang, 1, 0)} /> */}
         <Stack.Screen name='Register' component={Parent} options={headerOptions('auth', 'register', lang, 1, 0)} />
         {/* <Stack.Screen name='Physician' component={Physician} options={headerOptions('auth', 'register', lang, 1, 0)} /> */}
-        <Stack.Screen name='Waiting' component={Waiting} options={headerOptions('auth', 'register', lang, 1, 0)} />
-        <Stack.Screen name='Success' component={Success} options={headerOptions('auth', 'register', lang, 1, 0)} />
-        <Stack.Screen name='Failure' component={Failure} options={headerOptions('auth', 'register', lang, 1, 0)} />
+        {/* <Stack.Screen name='Waiting' component={Waiting} options={headerOptions('auth', 'register', lang, 1, 0)} /> */}
+        {/* <Stack.Screen name='Success' component={Success} options={headerOptions('auth', 'register', lang, 1, 0)} /> */}
+        {/* <Stack.Screen name='Failure' component={Failure} options={headerOptions('auth', 'register', lang, 1, 0)} /> */}
       </Stack.Navigator>
     );
   }
@@ -180,7 +180,7 @@ class QuestionnaireStack extends React.Component {
 
     return (
       <Stack.Navigator initialRouteName={'Questionnaire'} lazy={false}>
-        <Stack.Screen name='Questionnaire' component={Questionnaire} initialParams={{options: lang === 'ta' ? taOptions : options}} options={headerOptions('dashboard', 'questionnaire', lang, 0, 0)} />
+        <Stack.Screen name='Questionnaire' component={Questionnaire} initialParams={{options: lang === 'ta' ? taOptions : options, isMileStone: true}} options={headerOptions('dashboard', 'questionnaire', lang, 0, 0)} />
       </Stack.Navigator>
     );
   }
@@ -280,19 +280,32 @@ class SettingsStack extends React.Component {
 }
 
 class AppStack extends React.Component { 
-  state = {lang: 'en'};//null};
+  state = {lang: 'en', isQuestionsAnwered: false};//null};
 
   async componentDidMount() {
     let lang = await AsyncStorage.getItem('language');
-    this.setState({lang});
+    let isQuestionsAnwered = await AsyncStorage.getItem('isAnswered');
+    this.setState({lang, isQuestionsAnwered});
+  }
+  
+  async componentDidUpdate() {
+    let isQuestionsAnwered = await AsyncStorage.getItem('isAnswered');
+    this.setState({isQuestionsAnwered})
   }
 
   render() {
     const {route} = this.props;
-    const {lang} = this.state;
+    const {lang, isQuestionsAnwered} = this.state;
 
     if(lang === null)
       return null;
+
+    if(!isQuestionsAnwered)
+      return (
+        <Stack.Navigator initialRouteName={'QuestionnaireInit'}>
+          <Stack.Screen name='QuestionnaireInit' component={Questionnaire} initialParams={{options: lang === 'ta' ? taOptions : options, isMileStone: true}} options={headerOptions('dashboard', 'questionnaire', lang, 0, 0)} />
+        </Stack.Navigator>
+      )
 
     return (
       <Tab.Navigator initialRouteName={'Home'} tabBar={props => (<AnimatedTabBar animation={'iconOnly'} inactiveOpacity={0.25} inactiveScale={0.85} preset={'material'} tabs={tabs} {...props} />)} lazy={false}>

@@ -38,10 +38,10 @@ export default class Parent extends React.Component {
       "Image": null,
       "ChildName": babyName,
       "ChildDob": babyDob,
-      "Dob": '',
+      "Dob": null,
       "password": password,
       "UserCategoryId":3,
-      "UserStatusId": 1,
+      "UserStatusId": 2,
       "PhoneNo": phoneNo,
       "Email": email,
       "Address": address,
@@ -55,18 +55,21 @@ export default class Parent extends React.Component {
     }
     await registerUser(data).then(async ({userId}) => {
       await AsyncStorage.setItem('userId', userId.toString());
-      await AsyncStorage.setItem('type', 'register');  
-      let screenToMove = 'Waiting';
-      await getUserInfo(userId).then(({userStatusId}) => {
-        if(userStatusId === 2) {
-          screenToMove = 'Success';
-        } else if (userStatusId === 3) {
-          screenToMove = 'Failure';
-        } else {
-          screenToMove = 'Waiting';
-        }
-        navigation.navigate(screenToMove);
-      });
+      await AsyncStorage.setItem('type', 'register');
+      await AsyncStorage.setItem('babyDob', babyDob.toString());
+      await AsyncStorage.setItem('userName', firstName.toString());
+      // let screenToMove = 'Waiting';
+      // await getUserInfo(userId).then(({userStatusId}) => {
+        navigation.navigate('App');
+        // if(userStatusId === 2) {
+        //   screenToMove = 'Success';
+        // } else if (userStatusId === 3) {
+        //   screenToMove = 'Failure';
+        // } else {
+        //   screenToMove = 'Waiting';
+        // }
+        // navigation.navigate(screenToMove);
+      // });
     });
   }
 
@@ -75,15 +78,16 @@ export default class Parent extends React.Component {
     let lang = await AsyncStorage.getItem('language');
     let userId = await AsyncStorage.getItem('userId');
     if(userId) {
-      await getUserInfo(userId).then(({userStatusId}) => {
-        if(userStatusId === 2) {
-          navigation.navigate('Success');
-        } else if (userStatusId === 3) {
-          navigation.navigate('Failure');
-        } else {
-          navigation.navigate('Waiting');
-        }
-      });
+      navigation.navigate('App');
+      // await getUserInfo(userId).then(({userStatusId}) => {
+      //   if(userStatusId === 2) {
+      //     navigation.navigate('Success');
+      //   } else if (userStatusId === 3) {
+      //     navigation.navigate('Failure');
+      //   } else {
+      //     navigation.navigate('Waiting');
+      //   }
+      // });
     }
     this.setState({lang});
   }

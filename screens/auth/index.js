@@ -32,19 +32,20 @@ export default class Auth extends React.Component {
     let lang = await AsyncStorage.getItem('language');
     let userId = await AsyncStorage.getItem('userId');
     if(userId) {
-      let screenToMove = 'Waiting';
-      await getUserInfo(userId).then(({userStatusId}) => {
-        if(userStatusId === 2) {
-          screenToMove = 'Success';
-        } else if (userStatusId === 3) {
-          screenToMove = 'Failure';
-        } else {
-          screenToMove = 'Waiting';
-        }
-        navigation.navigate('Register', {
-          screen: screenToMove
-        });
-      });
+      navigation.navigate('App');
+      // let screenToMove = 'Waiting';
+      // await getUserInfo(userId).then(({userStatusId}) => {
+      //   if(userStatusId === 2) {
+      //     screenToMove = 'Success';
+      //   } else if (userStatusId === 3) {
+      //     screenToMove = 'Failure';
+      //   } else {
+      //     screenToMove = 'Waiting';
+      //   }
+        // navigation.navigate('Register', {
+        //   screen: screenToMove
+        // });
+      // });
     }
     this.setState({lang});
   }

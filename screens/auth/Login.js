@@ -14,8 +14,8 @@ import * as Yup from 'yup';
 const {width} = Dimensions.get('window');
 
 export default class Login extends React.Component {
-  state = {email: '', password: '', lang: null, isLoading: false};
-  // state = {email: 'moaj257@gmail.com', password: '123456', lang: null, isLoading: false};
+  // state = {email: '', password: '', lang: null, isLoading: false};
+  state = {email: 'moaj257@gmail.com', password: '123456', lang: null, isLoading: false};
   
   // handleChange = (name, text) => this.setState({[name]: text});
 
@@ -24,19 +24,20 @@ export default class Login extends React.Component {
     let lang = await AsyncStorage.getItem('language');
     let userId = await AsyncStorage.getItem('userId');
     if(userId) {
-      let screenToMove = 'Waiting';
-      await getUserInfo(userId).then(({userStatusId}) => {
-        if(userStatusId === 2) {
-          screenToMove = 'Success';
-        } else if (userStatusId === 3) {
-          screenToMove = 'Failure';
-        } else {
-          screenToMove = 'Waiting';
-        }
-        navigation.navigate('Register', {
-          screen: screenToMove
-        });
-      });
+      navigation.navigate('App');
+      // let screenToMove = 'Waiting';
+      // await getUserInfo(userId).then(({userStatusId}) => {
+      //   if(userStatusId === 2) {
+      //     screenToMove = 'Success';
+      //   } else if (userStatusId === 3) {
+      //     screenToMove = 'Failure';
+      //   } else {
+      //     screenToMove = 'Waiting';
+      //   }
+      //   navigation.navigate('Register', {
+      //     screen: screenToMove
+      //   });
+      // });
     }
     this.setState({lang});
   }
@@ -47,22 +48,25 @@ export default class Login extends React.Component {
             .then(async ({code, data}) => {
               if(parseInt(code) === 200 && data !== null) {
                 let dataJson = JSON.parse(data)[0];
-                const {UserId} = dataJson;
+                const {UserId, ChildDob, FirstName} = dataJson;
                 await AsyncStorage.setItem('userId', UserId.toString());
                 await AsyncStorage.setItem('type', 'login');
-                let screenToMove = 'Waiting';
-                await getUserInfo(UserId).then(({userStatusId}) => {
-                  if(userStatusId === 2) {
-                    screenToMove = 'Success';
-                  } else if (userStatusId === 3) {
-                    screenToMove = 'Failure';
-                  } else {
-                    screenToMove = 'Waiting';
-                  }
-                  navigation.navigate('Register', {
-                    screen: screenToMove
-                  });
-                });
+                await AsyncStorage.setItem('babyDob', ChildDob.toString());
+                await AsyncStorage.setItem('userName', FirstName.toString());
+                navigation.navigate('App');
+                // let screenToMove = 'Waiting';
+                // await getUserInfo(UserId).then(({userStatusId}) => {
+                //   if(userStatusId === 2) {
+                //     screenToMove = 'Success';
+                //   } else if (userStatusId === 3) {
+                //     screenToMove = 'Failure';
+                //   } else {
+                //     screenToMove = 'Waiting';
+                //   }
+                //   navigation.navigate('Register', {
+                //     screen: screenToMove
+                //   });
+                // });
               } else {
                 Alert.alert('Error', 'Login failed!');
               }
