@@ -14,8 +14,8 @@ import * as Yup from 'yup';
 const {width} = Dimensions.get('window');
 
 export default class Login extends React.Component {
-  // state = {email: '', password: '', lang: null, isLoading: false};
-  state = {email: 'moaj257@gmail.com', password: '123456', lang: null, isLoading: false};
+  state = {email: '', password: '', lang: null, isLoading: false};
+  // state = {email: 'moaj257@gmail.com', password: '123456', lang: null, isLoading: false};
   
   // handleChange = (name, text) => this.setState({[name]: text});
 

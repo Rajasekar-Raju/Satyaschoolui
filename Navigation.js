@@ -280,7 +280,7 @@ class SettingsStack extends React.Component {
 }
 
 class AppStack extends React.Component { 
-  state = {lang: 'en', isQuestionsAnwered: false};//null};
+  state = {lang: null, isQuestionsAnwered: false};//null};
 
   async componentDidMount() {
     let lang = await AsyncStorage.getItem('language');

@@ -27,8 +27,8 @@ export default class Questionnaire extends React.Component{
     const {route} = this.props;
     const {params} = route;
     const {options, isMileStone} = params;
-    return questions.map(({questionDescription, QuestionId}, i) => (
-      <SlideItem key={`slide-${i}`} nextSlide={this.nextSlide} question={questionDescription} isLast={questions.length - 1 === i && isMileStone} questionId={QuestionId} options={options} count={i + 1} />
+    return questions.map(({QuestionDescription, QuestionId}, i) => (
+      <SlideItem key={`slide-${i}`} nextSlide={this.nextSlide} question={QuestionDescription} isLast={questions.length - 1 === i && isMileStone} questionId={QuestionId} options={options} count={i + 1} />
     ));
   }
 
@@ -39,6 +39,7 @@ export default class Questionnaire extends React.Component{
     let lang = await AsyncStorage.getItem('language');
     let babyDob = await AsyncStorage.getItem('babyDob');
     let isQuestionsAnwered = await AsyncStorage.getItem('isAnswered');
+    console.log(!isQuestionsAnwered, !isMileStone, 'testing');
     let daysDiff = toDays(new Date(babyDob), new Date());
     let mileStoneFinder = Math.floor((daysDiff / 365) / 2);
     let mileStoneId = mileStoneFinder > 3 ? 3 : mileStoneFinder < 1 ? 1 : mileStoneFinder;
@@ -71,7 +72,7 @@ export default class Questionnaire extends React.Component{
         {/* <View style={styles.container}> */}
           {/* <Text style={styles.heading}>Questionnaire</Text> */}
         {/* </View> */}
-        <Swiper ref={'swiper'} scrollEnabled={!isMileStone && !isQuestionsAnwered ? false : true} showsButtons={false} showsPagination={options.length > 0 ? false : true} loop={false} activeDotColor={colors.primary} dotColor={`${colors.primary}70`}>
+        <Swiper ref={'swiper'} scrollEnabled={isMileStone && !isQuestionsAnwered ? false : true} showsButtons={false} showsPagination={options.length > 0 ? false : true} loop={false} activeDotColor={colors.primary} dotColor={`${colors.primary}70`}>
           {this.renderSlides()}
         </Swiper>
         <View>

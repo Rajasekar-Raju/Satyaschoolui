@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Alert, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { language, colors } from '../../utils/contants';
@@ -53,23 +53,30 @@ export default class Parent extends React.Component {
       "CreatedBy":1,
       "UpdatedBy":1
     }
-    await registerUser(data).then(async ({userId}) => {
-      await AsyncStorage.setItem('userId', userId.toString());
-      await AsyncStorage.setItem('type', 'register');
-      await AsyncStorage.setItem('babyDob', babyDob.toString());
-      await AsyncStorage.setItem('userName', firstName.toString());
-      // let screenToMove = 'Waiting';
-      // await getUserInfo(userId).then(({userStatusId}) => {
-        navigation.navigate('App');
-        // if(userStatusId === 2) {
-        //   screenToMove = 'Success';
-        // } else if (userStatusId === 3) {
-        //   screenToMove = 'Failure';
-        // } else {
-        //   screenToMove = 'Waiting';
-        // }
-        // navigation.navigate(screenToMove);
-      // });
+    await registerUser(data).then(async (data) => {
+      console.log(data, 'data');
+      const {userId, code, status} = data;
+      if(parseInt(code) === 200) {
+        await AsyncStorage.setItem('userId', userId.toString());
+        await AsyncStorage.setItem('type', 'register');
+        await AsyncStorage.setItem('babyDob', babyDob.toString());
+        await AsyncStorage.setItem('userName', firstName.toString());
+        // let screenToMove = 'Waiting';
+        // await getUserInfo(userId).then(({userStatusId}) => {
+          navigation.navigate('App');
+          // if(userStatusId === 2) {
+          //   screenToMove = 'Success';
+          // } else if (userStatusId === 3) {
+          //   screenToMove = 'Failure';
+          // } else {
+          //   screenToMove = 'Waiting';
+          // }
+          // navigation.navigate(screenToMove);
+        // });
+      } else {
+        this.setState({isLoading: false});
+        Alert.alert('Error', status);
+      }
     });
   }
 
@@ -210,7 +217,9 @@ export default class Parent extends React.Component {
                 )}
               </ScrollView>
               <TouchableOpacity style={[styles.loginText, styles.loginSubmit]} onPress={handleSubmit} disabled={isLoading}>
-                <Text style={[styles.textStyle, styles.loginSubmitText]}>{language[lang].register}</Text>
+                {isLoading ?
+                  (<ActivityIndicator color={colors.white} />) : 
+                  (<Text style={[styles.textStyle, styles.loginSubmitText]}>{language[lang].register}</Text>)}
               </TouchableOpacity>
             </>
           )}
