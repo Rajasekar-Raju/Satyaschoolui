@@ -17,8 +17,8 @@ import Email from '../../assets/images/common/mail.png';
 import { getUserInfo, registerUser } from '../../api';
 
 export default class Parent extends React.Component {
-  state = {lang: '', firstName: '', lastName: '', babyName: '', babyDob: '', phoneNo: '', address: '', password: '', retypePassword: '', email: '', city: '', state: '', country: '', pincode: '', isDobShow: false, isBDobShow: false, isLoading: false};
-  // state = {lang: '', firstName: 'Mo', lastName: 'Aj', babyName: 'Baby Tara', babyDob: new Date('2020-09-30T06:41:58.166Z'), phoneNo: '9876543210', address: 'Test', password: '123456', retypePassword: '123456', email: 'moaj257@gmail.com', city: 'Puducherry', state: 'Pondicherry', country: 'India', pincode: '605007', isDobShow: false, isBDobShow: false, isLoading: false};
+  // state = {lang: '', firstName: '', lastName: '', babyName: '', babyDob: '', phoneNo: '', address: '', password: '', retypePassword: '', email: '', city: '', state: '', country: '', pincode: '', isDobShow: false, isBDobShow: false, isLoading: false};
+  state = {lang: '', firstName: 'Mo', lastName: 'Aj', babyName: 'Baby Tara', babyDob: new Date('2020-09-30T06:41:58.166Z'), phoneNo: '9876543210', address: 'Test', password: '123456', retypePassword: '123456', email: 'moaj2547@gmail.com', city: 'Puducherry', state: 'Pondicherry', country: 'India', pincode: '605007', isDobShow: false, isBDobShow: false, isLoading: false};
 
   // handleChange = (name, text) => this.setState({[name]: text});
 
@@ -32,7 +32,7 @@ export default class Parent extends React.Component {
   register = async ({firstName, lastName, babyName, dob, babyDob, phoneNo, address, password, email, state, city, country, pincode}) => {
     const {navigation} = this.props;
     this.setState({isLoading: true});
-    const data = {
+    const regData = {
       "FirstName": firstName,
       "LastName": lastName,
       "Image": null,
@@ -53,17 +53,18 @@ export default class Parent extends React.Component {
       "CreatedBy":1,
       "UpdatedBy":1
     }
-    await registerUser(data).then(async (data) => {
-      console.log(data, 'data');
-      const {userId, code, status} = data;
+    await registerUser(regData).then(async (regData) => {
+      const {data, code, status} = regData;
+      const {UserId} = JSON.parse(data);
+      // console.log(data, JSON.parse(data), code, parseInt(code) === 200, 'data');
       if(parseInt(code) === 200) {
-        await AsyncStorage.setItem('userId', userId.toString());
+        await AsyncStorage.setItem('userId', UserId.toString());
         await AsyncStorage.setItem('type', 'register');
         await AsyncStorage.setItem('babyDob', babyDob.toString());
         await AsyncStorage.setItem('userName', firstName.toString());
+        navigation.navigate('App');
         // let screenToMove = 'Waiting';
         // await getUserInfo(userId).then(({userStatusId}) => {
-          navigation.navigate('App');
           // if(userStatusId === 2) {
           //   screenToMove = 'Success';
           // } else if (userStatusId === 3) {

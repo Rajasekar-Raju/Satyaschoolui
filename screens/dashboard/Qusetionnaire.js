@@ -39,7 +39,7 @@ export default class Questionnaire extends React.Component{
     let lang = await AsyncStorage.getItem('language');
     let babyDob = await AsyncStorage.getItem('babyDob');
     let isQuestionsAnwered = await AsyncStorage.getItem('isAnswered');
-    console.log(!isQuestionsAnwered, !isMileStone, 'testing');
+    // console.log(!isQuestionsAnwered, !isMileStone, 'testing');
     let daysDiff = toDays(new Date(babyDob), new Date());
     let mileStoneFinder = Math.floor((daysDiff / 365) / 2);
     let mileStoneId = mileStoneFinder > 3 ? 3 : mileStoneFinder < 1 ? 1 : mileStoneFinder;
