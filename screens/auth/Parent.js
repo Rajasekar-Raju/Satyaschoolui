@@ -17,8 +17,8 @@ import Email from '../../assets/images/common/mail.png';
 import { getUserInfo, registerUser } from '../../api';
 
 export default class Parent extends React.Component {
-  // state = {lang: '', firstName: '', lastName: '', babyName: '', babyDob: '', phoneNo: '', address: '', password: '', retypePassword: '', email: '', city: '', state: '', country: '', pincode: '', isDobShow: false, isBDobShow: false, isLoading: false};
-  state = {lang: '', firstName: 'Mo', lastName: 'Aj', babyName: 'Baby Tara', babyDob: new Date('2020-09-30T06:41:58.166Z'), phoneNo: '9876543210', address: 'Test', password: '123456', retypePassword: '123456', email: 'moaj2547@gmail.com', city: 'Puducherry', state: 'Pondicherry', country: 'India', pincode: '605007', isDobShow: false, isBDobShow: false, isLoading: false};
+  state = {lang: '', firstName: '', lastName: '', babyName: '', babyDob: '', phoneNo: '', address: '', password: '', retypePassword: '', email: '', city: '', state: '', country: '', pincode: '', isDobShow: false, isBDobShow: false, isLoading: false};
+  // state = {lang: '', firstName: 'Mo', lastName: 'Aj', babyName: 'Baby Tara', babyDob: new Date('2020-09-30T06:41:58.166Z'), phoneNo: '9876543210', address: 'Test', password: '123456', retypePassword: '123456', email: 'moaj2547@gmail.com', city: 'Puducherry', state: 'Pondicherry', country: 'India', pincode: '605007', isDobShow: false, isBDobShow: false, isLoading: false};
 
   // handleChange = (name, text) => this.setState({[name]: text});
 
@@ -59,7 +59,7 @@ export default class Parent extends React.Component {
       // console.log(data, JSON.parse(data), code, parseInt(code) === 200, 'data');
       if(parseInt(code) === 200) {
         await AsyncStorage.setItem('userId', UserId.toString());
-        await AsyncStorage.setItem('type', 'register');
+        await AsyncStorage.setItem('isLoggedIn', '1');
         await AsyncStorage.setItem('babyDob', babyDob.toString());
         await AsyncStorage.setItem('userName', firstName.toString());
         navigation.navigate('App');
@@ -98,6 +98,12 @@ export default class Parent extends React.Component {
       // });
     }
     this.setState({lang});
+  }
+
+  async componentDidUpdate() {
+    let userId = await AsyncStorage.getItem('userId');
+    if(userId)
+      navigation.navigate('App');
   }
 
   render() {

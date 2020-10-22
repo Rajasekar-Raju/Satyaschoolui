@@ -50,6 +50,12 @@ export default class Auth extends React.Component {
     this.setState({lang});
   }
 
+  async componentDidUpdate() {
+    let userId = await AsyncStorage.getItem('userId');
+    if(userId)
+      navigation.navigate('App');
+  }
+
   render() {
     const {lang} = this.state;
     if(!lang)

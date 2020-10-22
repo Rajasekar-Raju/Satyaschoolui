@@ -42,6 +42,12 @@ export default class Login extends React.Component {
     this.setState({lang});
   }
 
+  async componentDidUpdate() {
+    let userId = await AsyncStorage.getItem('userId');
+    if(userId)
+      navigation.navigate('App');
+  }
+
   login = async ({email, password}) => {
     const {navigation} = this.props;
     await loginUser({email, password})
@@ -50,7 +56,7 @@ export default class Login extends React.Component {
                 let dataJson = JSON.parse(data)[0];
                 const {UserId, ChildDob, FirstName} = dataJson;
                 await AsyncStorage.setItem('userId', UserId.toString());
-                await AsyncStorage.setItem('type', 'login');
+                await AsyncStorage.setItem('isLoggedIn', '1');
                 await AsyncStorage.setItem('babyDob', ChildDob.toString());
                 await AsyncStorage.setItem('userName', FirstName.toString());
                 navigation.navigate('App');
