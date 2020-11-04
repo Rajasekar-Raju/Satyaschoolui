@@ -83,6 +83,7 @@ export const language = {
     checkNow: 'Check Now',
     done: 'Done',
     visitors: 'Visitors',
+    visitor: 'Visitor',
     questions: [
       {question: 'What are some good questions to ask?', options },
       {question: 'What are 10 questions to ask?', options },
@@ -156,6 +157,7 @@ export const language = {
     checkNow: 'இப்போது சரிபார்க்க',
     done: 'முடிந்தது',
     visitors: 'பார்வையாளர்கள்',
+    visitor: 'பார்வையாளர்',
     questions: [
       {question: 'கேட்க சில நல்ல கேள்விகள் யாவை?', options: taOptions },
       {question: 'கேட்க 10 கேள்விகள் யாவை?', options: taOptions },

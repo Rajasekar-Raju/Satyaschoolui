@@ -48,7 +48,7 @@ export default class Home extends React.Component{
     await getUserAnswers(userId)
                 .then(({data}) => {
                   let total = JSON.parse(data);
-                  let answered = total.filter(data => data.AnsDescription === 'yes');
+                  let answered = total.filter(data => data.AnsDescription !== 'yes');
                   let average = Math.round((answered.length/total.length) * 100);
                   this.setState({total, answered, average});
                 });

@@ -35,7 +35,7 @@ export default class Questionnaire extends React.Component{
   async componentDidMount() {
     const {route} = this.props;
     const {params} = route;
-    const {isMileStone} = params;
+    const {isMileStone, mileStonesId} = params;
     let lang = await AsyncStorage.getItem('language');
     let babyDob = await AsyncStorage.getItem('babyDob');
     let isQuestionsAnwered = await AsyncStorage.getItem('isAnswered');
@@ -43,8 +43,10 @@ export default class Questionnaire extends React.Component{
     let daysDiff = toDays(new Date(babyDob), new Date());
     let mileStoneFinder = Math.floor((daysDiff / 365) / 2);
     let mileStoneId = mileStoneFinder > 3 ? 3 : mileStoneFinder < 1 ? 1 : mileStoneFinder;
-    if(isMileStone)
+    if(isMileStone && !mileStonesId)
       await getMileStoneQuestions(mileStoneId).then(({data}) => this.setState({lang, questions: JSON.parse(data), isLoading: false, isQuestionsAnwered}));
+    else if(isMileStone && mileStonesId)
+      await getMileStoneQuestions(mileStonesId).then(({data}) => this.setState({lang, questions: JSON.parse(data), isLoading: false, isQuestionsAnwered}));
     else
       await getAllQuestions().then(questions => this.setState({lang, questions, isLoading: false, isQuestionsAnwered}));
   }
@@ -72,7 +74,7 @@ export default class Questionnaire extends React.Component{
         {/* <View style={styles.container}> */}
           {/* <Text style={styles.heading}>Questionnaire</Text> */}
         {/* </View> */}
-        <Swiper ref={'swiper'} scrollEnabled={isMileStone && !isQuestionsAnwered ? false : true} showsButtons={false} showsPagination={options.length > 0 ? false : true} loop={false} activeDotColor={colors.primary} dotColor={`${colors.primary}70`}>
+        <Swiper ref={'swiper'} scrollEnabled={options.length === 0 ? true : false} showsButtons={false} showsPagination={options.length > 0 ? false : true} loop={false} activeDotColor={colors.primary} dotColor={`${colors.primary}70`}>
           {this.renderSlides()}
         </Swiper>
         <View>

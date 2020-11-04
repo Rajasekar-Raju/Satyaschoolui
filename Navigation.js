@@ -27,6 +27,7 @@ import Questionnaire from './screens/dashboard/Qusetionnaire';
 
 import Left from './assets/images/common/left.png';
 import { getUserInfo } from './api';
+import Visitor from './screens/visitors';
 
 const tabProps = {
   labelStyle: {
@@ -108,6 +109,30 @@ class RegisterStack extends React.Component {
   }
 }
 
+class QuestionnaireVisitorStack extends React.Component { 
+  state = {lang: null};
+
+  async componentDidMount() {
+    let lang = await AsyncStorage.getItem('language');
+    this.setState({lang});
+  }
+
+  render() { 
+    const {route} = this.props;
+    const {lang} = this.state;
+
+    if(lang === null)
+      return null;
+
+    return (
+      <Stack.Navigator initialRouteName={'Vsitor'} lazy={false}>
+        <Stack.Screen name='Vsitor' component={Visitor} options={headerOptions('auth', 'visitor', lang, 1, 0)} />
+        <Stack.Screen name='QuestionnaireVsitor' component={Questionnaire} options={headerOptions('auth', 'visitor', lang, 1, 0)} />
+      </Stack.Navigator>
+    );
+  }
+}
+
 class AuthStack extends React.Component { 
   state = {lang: null};
 
@@ -128,7 +153,7 @@ class AuthStack extends React.Component {
         <Stack.Screen name='Auth' component={Auth} initialParams={{rootRoute: route}} options={{headerShown: false}} />
         <Stack.Screen name='Login' component={Login} initialParams={{rootRoute: route}} options={headerOptions('auth', 'login', lang, 1, 0)} />
         <Stack.Screen name='Register' component={RegisterStack} initialParams={{rootRoute: route}} options={{headerShown: false}} />
-        <Stack.Screen name='QuestionnaireVisitor' component={Questionnaire} initialParams={{options: []}} options={headerOptions('dashboard', 'questionnaire', lang, 1, 0)} />
+        <Stack.Screen name='QuestionnaireVisitor' component={QuestionnaireVisitorStack} initialParams={{options: []}} options={{headerShown: false}} />
       </Stack.Navigator>
     );
   }
@@ -328,7 +353,7 @@ class Navigation extends React.Component {
   }
 
   async componentDidMount() {
-    // await AsyncStorage.clear();
+    await AsyncStorage.clear();
     let langID = await AsyncStorage.getItem('language');
     let isFirst = await AsyncStorage.getItem('isFirst');
     let isLoggedIn = await AsyncStorage.getItem('isLoggedIn');
@@ -338,8 +363,8 @@ class Navigation extends React.Component {
     if(!langID)
       this.setLanguage('en');
     this.setState({lang: langID !== null ? langID : 'en', initScreen});
-    if(!isFirst)
-      await AsyncStorage.setItem('isFirst', '1');
+    // if(!isFirst)
+    //   await AsyncStorage.setItem('isFirst', '1');
   }
 
   render() {

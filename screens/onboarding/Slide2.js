@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   onboardingSkip: {
     paddingVertical: 6,
     paddingHorizontal: 10,
-    backgroundColor: `${colors.primary}70`,
+    backgroundColor: `${colors.primary}`,
     borderRadius: 5,
   },
   skipX: {
