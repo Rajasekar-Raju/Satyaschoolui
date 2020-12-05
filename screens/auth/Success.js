@@ -14,7 +14,7 @@ export default class Success extends React.Component {
     const {navigation} = this.props;
     navigation.navigate('App');
   }
-
+ 
   async componentDidMount() {
     let lang = await AsyncStorage.getItem('language');
     await AsyncStorage.setItem('isLoggedIn', '1');
