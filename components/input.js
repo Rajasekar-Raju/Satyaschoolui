@@ -1,56 +1,106 @@
-import React from 'react';
-import {View, TextInput, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import React from "react";
+import {
+  View,
+  TextInput,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 
-import {colors} from '../utils/contants';
-import EyeSrike from '../assets/images/common/eye-strike.png';
-import Eye from '../assets/images/common/eye.png';
-import { toDate } from '../utils/functions';
+import { colors } from "../utils/contants";
+import EyeSrike from "../assets/images/common/eye-strike.png";
+import Eye from "../assets/images/common/eye.png";
+import { toDate } from "../utils/functions";
 
 export default class Input extends React.Component {
-  state = {isVisible: false};
+  state = { isVisible: false };
 
-  toggleVisible = () => this.setState({isVisible: !this.state.isVisible});
+  toggleVisible = () => this.setState({ isVisible: !this.state.isVisible });
 
   render() {
-    const {type, touched, name, value, placeholder, onChange, onBlur, image, editable, style, error} = this.props;
-    const {isVisible} = this.state;
+    const {
+      type,
+      touched,
+      name,
+      value,
+      placeholder,
+      onChange,
+      onBlur,
+      image,
+      editable,
+      style,
+      error,
+      onPress,
+    } = this.props;
+    const { isVisible } = this.state;
 
-    let dispValue = name.toLowerCase().indexOf('dob') !== -1 && value ? toDate(value) : value;
+    let dispValue =
+      name.toLowerCase().indexOf("dob") !== -1 && value ? toDate(value) : value;
 
     return (
-      <View style={[styles.flexRow, styles.center, styles.input, style, error && touched ? {backgroundColor: `${colors.dander}4f`} : {}]}>
-        {image && (<View>
-          <Image source={image} />
-        </View>)}
+      <View
+        style={[
+          styles.flexRow,
+          styles.center,
+          styles.input,
+          style,
+          error && touched ? { backgroundColor: `${colors.dander}4f` } : {},
+        ]}
+      >
+        {image && (
+          <View>
+            <Image source={image} />
+          </View>
+        )}
         <View style={[styles.flex]}>
-          <TextInput keyboardType={type} value={dispValue} onBlur={onBlur} onChangeText={onChange} placeholder={placeholder} style={[styles.textStyle, styles.inputText, styles.textMargin, {alignItems: 'center'}]} secureTextEntry={name.toLowerCase().indexOf('password') !== -1 && !isVisible} editable={editable} />
+          <TextInput
+            keyboardType={type}
+            value={dispValue}
+            onBlur={onBlur}
+            onChangeText={onChange}
+            onTouchStart={onPress}
+            placeholder={placeholder}
+            style={[
+              styles.textStyle,
+              styles.inputText,
+              styles.textMargin,
+              { alignItems: "center" },
+            ]}
+            secureTextEntry={
+              name.toLowerCase().indexOf("password") !== -1 && !isVisible
+            }
+            editable={editable}
+          />
         </View>
-        {name.toLowerCase().indexOf('password') !== -1 && (
-          <TouchableOpacity onPress={this.toggleVisible} style={styles.textMargin}>
+        {name.toLowerCase().indexOf("password") !== -1 && (
+          <TouchableOpacity
+            onPress={this.toggleVisible}
+            style={styles.textMargin}
+          >
             <Image source={isVisible ? EyeSrike : Eye} />
           </TouchableOpacity>
         )}
       </View>
-    )
+    );
   }
 }
 
 const styles = StyleSheet.create({
   flex: {
-    flex: 1
+    flex: 1,
   },
   flexRow: {
-    flexDirection: 'row'
+    flexDirection: "row",
   },
   center: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   textStyle: {
     fontSize: 24,
     lineHeight: 32,
     letterSpacing: -0.3,
-    fontFamily: 'Poppins_400Regular'
+    fontFamily: "Poppins_400Regular",
   },
   input: {
     padding: 7,
@@ -60,9 +110,9 @@ const styles = StyleSheet.create({
   inputText: {
     fontSize: 18,
     marginTop: 5,
-    lineHeight: 24
+    lineHeight: 24,
   },
   textMargin: {
     marginLeft: 10,
-  }
+  },
 });

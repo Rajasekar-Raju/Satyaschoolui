@@ -11,8 +11,9 @@ const {width, height} = Dimensions.get('window');
 export default class SlideItem extends React.Component {
   state = {btnDisabled: false, isLoading: false};
 
-  handleOptionPress = async (questionId, answerVal, nextSlide, isLast) => {
-    this.setState({isLoading: true});
+  handleOptionPress = async (questionId, answerVal, nextSlide, isLast,home) => {
+    this.setState({isLoading: true});    
+    const {navigation,firstSlide} = this.props;     
     let userId = await AsyncStorage.getItem('userId');
     if(!userId)
       nextSlide();
@@ -22,7 +23,11 @@ export default class SlideItem extends React.Component {
                     .then(async () => {
                       this.setState({isLoading: false});
                       if(isLast){
-                        await AsyncStorage.setItem('isAnswered', '1');
+                        await AsyncStorage.setItem('isAnswered', '1');   
+                        if(home){
+                          firstSlide();
+                          navigation.navigate('Home');
+                        }                     
                       } else {
                         nextSlide();
                       }
@@ -33,8 +38,8 @@ export default class SlideItem extends React.Component {
     }
   }
 
-  renderOptions = (options, nextSlide, questionId, isLoading, isLast) => options.map((option, i) => (
-    <TouchableOpacity key={`option-${i}`} style={styles.questionOptContainer} onPress={() => this.handleOptionPress(questionId, option.value, nextSlide, isLast)} disabled={isLoading}>
+  renderOptions = (options, nextSlide, questionId, isLoading, isLast,home) => options.map((option, i) => (
+    <TouchableOpacity key={`option-${i}`} style={styles.questionOptContainer} onPress={() => this.handleOptionPress(questionId, option.value, nextSlide, isLast,home)} disabled={isLoading}>
       <Text style={styles.questionOptText}>{option.name}</Text>
     </TouchableOpacity>
   ));
@@ -50,7 +55,7 @@ export default class SlideItem extends React.Component {
   }
 
   render() {
-    const {count, question, options, nextSlide, questionId, isLast} = this.props;
+    const {count, question, options, nextSlide, questionId, isLast, home} = this.props;
     const {btnDisabled, isLoading} = this.state;
 
     return (
@@ -65,7 +70,7 @@ export default class SlideItem extends React.Component {
           </TouchableOpacity>
         </View>
         <View style={styles.optionsContainer}>
-          {isLoading ? (<ActivityIndicator size='large' color={colors.primary} />) : this.renderOptions(options, nextSlide, questionId, isLoading, isLast)}
+          {isLoading ? (<ActivityIndicator size='large' color={colors.primary} />) : this.renderOptions(options, nextSlide, questionId, isLoading, isLast, home)}
         </View>
       </View>
     );
