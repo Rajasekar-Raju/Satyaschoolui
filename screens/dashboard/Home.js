@@ -132,6 +132,8 @@ export default class Home extends React.Component {
               this.state.image !== null
                 ? this.state.image !== ""
                   ? { uri: this.state.image }
+                  : this.state.image === this.getProfile()
+                  ? { uri: this.state.image }
                   : PersonPng
                 : PersonPng
             }
@@ -179,7 +181,7 @@ export default class Home extends React.Component {
     let userId = await AsyncStorage.getItem("userId");
     let pushToken = await AsyncStorage.getItem("pushToken");
     if (pushToken === "" || pushToken === null) {
-      await this.registerForPushNotificationsAsync().then(async (token) => {
+      this.registerForPushNotificationsAsync().then(async (token) => {
         await AsyncStorage.setItem("pushToken", token);
         let usertoken = { UserId: parseInt(userId), Token: token };
         await getToken(usertoken).then((data) => data);
@@ -196,6 +198,9 @@ export default class Home extends React.Component {
     if (image !== profile) {
       this.setState({ image: profile });
     }
+    if (profile !== null && profile !== "") {
+      return profile;
+    } else return image;
   };
 
   async componentDidUpdate() {

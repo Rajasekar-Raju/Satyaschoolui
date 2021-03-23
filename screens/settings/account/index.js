@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import * as Yup from "yup";
 import { Formik } from "formik";
+import * as mime from "react-native-mime-types";
 import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-community/async-storage";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -19,7 +20,13 @@ import MapPin from "../../../assets/images/common/map-pin.png";
 import Phone from "../../../assets/images/common/phone.png";
 import TextImg from "../../../assets/images/common/text.png";
 import Password from "../../../assets/images/common/password.png";
-import { getUserInfo, updateUser, getStates, getDistricts } from "../../../api";
+import {
+  getUserInfo,
+  updateUser,
+  getStates,
+  getDistricts,
+  uploadProfile,
+} from "../../../api";
 import Input from "../../../components/input";
 import Modal from "../../auth/Modal";
 var moment = require("moment");
@@ -221,11 +228,34 @@ class Account extends React.Component {
         quality: 0.5,
       });
       if (!result.cancelled) {
+        let userId = await AsyncStorage.getItem("userId");
+        let localUri = result.uri;
+        let filename = localUri.split("/").pop();
+        let formData = new FormData();
+        formData.append("file", {
+          uri: localUri,
+          name: filename,
+          type: mime.lookup(filename),
+        });
         let user = {
           ...this.state.user,
-          Image: `data:image/jpg;base64,${result.base64}`,
+          Image: localUri,
         };
         this.setState({ user });
+        formData.append("id", userId);
+        const config = {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "multipart/form-data",
+          },
+          body: formData,
+        };
+        await uploadProfile(config).then(async (data) => {
+          if (data.code === "200") {
+            await AsyncStorage.setItem("profile", data.data);
+          }
+        });
       }
     } else {
       alert("Sorry, we need camera roll permissions to make this work!");

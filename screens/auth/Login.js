@@ -30,15 +30,21 @@ export default class Login extends React.Component {
 
   redirectToHome = async () => {
     let userId = await AsyncStorage.getItem("userId");
-    await getUserAnswers(userId).then(async ({ code }) => {
-      if (code === "200") {
-        await AsyncStorage.setItem("isAnswered", "1");
-      } else {
-        await AsyncStorage.setItem("isAnswered", "0");
-      }
-    });
-    this.props.navigation.dispatch(StackActions.popToTop());
-    this.props.navigation.dispatch(StackActions.replace("App"));
+    let isAdmin = await AsyncStorage.getItem("isAdmin");
+    if (isAdmin !== "1") {
+      await getUserAnswers(userId).then(async ({ code }) => {
+        if (code === "200") {
+          await AsyncStorage.setItem("isAnswered", "1");
+        } else {
+          await AsyncStorage.setItem("isAnswered", "0");
+        }
+      });
+      this.props.navigation.dispatch(StackActions.popToTop());
+      this.props.navigation.dispatch(StackActions.replace("App"));
+    } else {
+      this.props.navigation.dispatch(StackActions.popToTop());
+      this.props.navigation.dispatch(StackActions.replace("Admin"));
+    }
   };
 
   async componentDidMount() {
@@ -77,10 +83,11 @@ export default class Login extends React.Component {
     await loginUser({ email, password }).then(async ({ code, data }) => {
       if (parseInt(code) === 200 && data !== null) {
         let dataJson = JSON.parse(data)[0];
-        const { UserId, ChildDob, FirstName, Image } = dataJson;
+        const { UserId, ChildDob, FirstName, Image, UserCategoryId } = dataJson;
         await AsyncStorage.setItem("profile", Image === null ? "" : Image);
         await AsyncStorage.setItem("userId", UserId.toString());
         await AsyncStorage.setItem("isLoggedIn", "1");
+        await AsyncStorage.setItem("isAdmin", UserCategoryId.toString());
         await AsyncStorage.setItem("babyDob", ChildDob.toString());
         await AsyncStorage.setItem("userName", FirstName.toString());
         // navigation.navigate('App');

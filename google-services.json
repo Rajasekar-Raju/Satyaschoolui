@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "836806998754",
+    "project_id": "satyaschool-c3ac1",
+    "storage_bucket": "satyaschool-c3ac1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836806998754:android:05029dabc1c6356b48bcbb",
+        "android_client_info": {
+          "package_name": "com.fourthape.satyaschool"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836806998754-ghhtfheigb966om44a54q6kbf85ac7dj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcd2YkzZfa9HMCl0B3J2VsUtV_TVBZL-o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "836806998754-ghhtfheigb966om44a54q6kbf85ac7dj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -30,7 +30,10 @@ import Terms from "./screens/settings/terms";
 import Policy from "./screens/settings/policy";
 import Appointments from "./screens/settings/appointments";
 import Account from "./screens/settings/account";
-
+import ChatList from "./screens/admin/Home";
+import ChatUser from "./screens/admin/Chat";
+import Contacts from "./screens/admin/Contact";
+import Profile from "./screens/admin/Profile";
 import Left from "./assets/images/common/left.png";
 import { getUserInfo } from "./api";
 import Visitor from "./screens/visitors";
@@ -576,6 +579,54 @@ class AppStack extends React.Component {
   }
 }
 
+class AdminStack extends React.Component {
+  state = { lang: null }; //null};
+
+  async componentDidMount() {
+    let lang = await AsyncStorage.getItem("language");
+    this.setState({ lang });
+  }
+
+  async componentDidUpdate() {
+    let lang = await AsyncStorage.getItem("language");
+    if (lang !== this.state.lang) {
+      this.setState({ lang: null });
+      this.setState({ lang });
+    }
+  }
+
+  render() {
+    const { lang } = this.state;
+
+    if (lang === null) return null;
+
+    return (
+      <Stack.Navigator initialRouteName={"ChatList"} lazy={false}>
+        <Stack.Screen
+          name="ChatList"
+          component={ChatList}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Chat"
+          component={ChatUser}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Contact"
+          component={Contacts}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
+    );
+  }
+}
+
 class Navigation extends React.Component {
   state = { initScreen: null, lang: null };
 
@@ -589,8 +640,15 @@ class Navigation extends React.Component {
     let langID = await AsyncStorage.getItem("language");
     let isFirst = await AsyncStorage.getItem("isFirst");
     let isLoggedIn = await AsyncStorage.getItem("isLoggedIn");
+    let isAdmin = await AsyncStorage.getItem("isAdmin");
     let initScreen =
-      isFirst !== "1" ? "Onboarding" : isLoggedIn !== "1" ? "Auth" : "App";
+      isFirst !== "1"
+        ? "Onboarding"
+        : isLoggedIn !== "1"
+        ? "Auth"
+        : isAdmin !== "1"
+        ? "App"
+        : "Admin";
     if (!langID) this.setLanguage("en");
     this.setState({ lang: langID !== null ? langID : "en", initScreen });
     if (isFirst !== false) await AsyncStorage.setItem("isFirst", "1");
@@ -618,6 +676,12 @@ class Navigation extends React.Component {
           <Stack.Screen
             name="App"
             component={AppStack}
+            initialParams={{ lang, setLanguage: this.setLanguage }}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Admin"
+            component={AdminStack}
             initialParams={{ lang, setLanguage: this.setLanguage }}
             options={{ headerShown: false }}
           />

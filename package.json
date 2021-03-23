@@ -7,7 +7,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "connect": "expo push:android:upload --api-key AAAAwtWVeuI:APA91bFYS9L5FD6X37rPEtFsdiSJ3nyb4cWAm6KB9uKhuH3xSrVl7kVId2wS7x__GkBRWXd0FET0kINn5QZLa-I6tYNAaRcjJWrQrkOzfj1015EG_mOAwIyd8hpz_QA6Y3RIemfJmP1g"
   },
   "dependencies": {
     "@aspnet/signalr": "^1.1.4",
@@ -16,6 +17,7 @@
     "@gorhom/animated-tabbar": "^2.0.1",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",
+    "@microsoft/signalr": "^5.0.4",
     "@react-native-community/async-storage": "^1.11.0",
     "@react-native-community/datetimepicker": "^2.4.0",
     "@react-native-community/masked-view": "0.1.10",
@@ -63,6 +65,9 @@
     "react-native-web": "~0.11.7",
     "react-native-web-swiper": "^2.1.7",
     "react-navigation": "^4.4.3",
+    "react-redux": "^7.2.2",
+    "redux": "^4.0.5",
+    "redux-thunk": "^2.3.0",
     "signalr": "^2.4.1",
     "signalr-client-react": "^0.2.1",
     "yup": "^0.29.3"

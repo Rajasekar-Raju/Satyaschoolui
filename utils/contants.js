@@ -8,6 +8,18 @@ export const colors = {
 
 export const baseURL = "http://51.210.150.124:8088/";
 
+export const CHAT = {
+  SET_CHATS: "SET_CHATS",
+  SET_MESSAGES: "SET_MESSAGES",
+  SET_INIT_MESSAGES: "SET_INIT_MESSAGES",
+  SET_CONNECTION: "SET_CONNECTION",
+  SET_DEL_MESSAGES: "SET_DEL_MESSAGES",
+  UPDATE_USERS: "UPDATE_USERS",
+  SET_LOADING: "SET_LOADING",
+};
+
+export const RESET = "RESET";
+
 export const options = [
   { name: "Yes", value: "yes" },
   { name: "No", value: "no" },

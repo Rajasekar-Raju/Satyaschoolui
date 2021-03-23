@@ -10,6 +10,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#fbc341"
     },
+    "notification":{
+      "icon": "./assets/icon.png"
+    },
     "androidStatusBar": {
       "backgroundColor": "#fbc341",
       "translucent": false
@@ -26,6 +29,7 @@
     },
     "android": {
       "package": "com.fourthape.satyaschool",
+      "googleServicesFile": "./google-services.json",
       "useNextNotificationsApi": true
     },
     "web": {
