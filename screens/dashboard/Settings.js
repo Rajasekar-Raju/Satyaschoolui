@@ -39,6 +39,7 @@ export default class Settings extends React.Component {
     let token = await AsyncStorage.getItem("pushToken");
     await deleteToken(token);
     await AsyncStorage.removeItem("isLoggedIn");
+    await AsyncStorage.removeItem("isAdmin");
     await AsyncStorage.removeItem("userId");
     await AsyncStorage.removeItem("profile");
     await AsyncStorage.removeItem("babyDob");

@@ -25,39 +25,13 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import Lightbox from "react-native-lightbox";
 import { Audio, Video } from "expo-av";
 import { colors, baseURL } from "../../utils/contants";
-import * as signalR from "@aspnet/signalr";
+import * as signalR from "@microsoft/signalr";
 import { getUserInfo, uploadFile } from "../../api";
 var moment = require("moment");
 
 const { width, height } = Dimensions.get("window");
 
-const user = require("../../assets/images/chats/user.png");
-const trust = require("../../assets/images/chats/trust.png");
-
-const chats = [
-  { icon: trust, id: 2, message: "Hi there", type: "text" },
-  { icon: user, id: 1, message: "Hey there", type: "text" },
-  {
-    icon: trust,
-    id: 2,
-    message: require("../../assets/images/chats/photo.png"),
-    type: "photo",
-  },
-  {
-    icon: user,
-    id: 1,
-    message: require("../../assets/images/chats/audio.mp3"),
-    type: "audio",
-  },
-  {
-    icon: trust,
-    id: 2,
-    message: require("../../assets/images/chats/video.mp4"),
-    type: "video",
-  },
-];
-
-const ChatItem = ({
+export const ChatItem = ({
   chat,
   isPlaying,
   playbackInstance,
@@ -247,7 +221,7 @@ export default class Chat extends React.Component {
 
     const connectionHub = new signalR.HubConnectionBuilder()
       .withUrl(hubUrl)
-      // .configureLogging(signalR.LogLevel.Information)
+      .withAutomaticReconnect()
       .build();
 
     connectionHub.on("onDelete", (msgId) => {
@@ -294,7 +268,7 @@ export default class Chat extends React.Component {
       isActive: true,
       files: "",
     };
-    connection.invoke("sendMessage", sendMessage);
+    connection.invoke("sendMessage", sendMessage, false);
     this.setState({ message: "" });
   };
 
@@ -371,7 +345,7 @@ export default class Chat extends React.Component {
                 isActive: true,
                 files: "",
               };
-              connection.invoke("sendMessage", sendMessage);
+              connection.invoke("sendMessage", sendMessage, false);
             }
           });
         } else {
@@ -426,7 +400,7 @@ export default class Chat extends React.Component {
                 isActive: true,
                 files: "",
               };
-              connection.invoke("sendMessage", sendMessage);
+              connection.invoke("sendMessage", sendMessage, false);
             }
           });
         } else {
@@ -479,7 +453,7 @@ export default class Chat extends React.Component {
               isActive: true,
               files: "",
             };
-            connection.invoke("sendMessage", sendMessage);
+            connection.invoke("sendMessage", sendMessage, false);
           }
         });
       } else {
@@ -506,7 +480,7 @@ export default class Chat extends React.Component {
       loader,
     } = this.state;
     if (!lang) return null;
-
+    console.log(messages);
     return (
       <View style={styles.container}>
         <ScrollView

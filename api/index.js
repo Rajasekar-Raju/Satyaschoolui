@@ -82,3 +82,8 @@ export const deleteToken = async (mail) =>
 
 export const getToken = async (data) =>
   await postMethod(`api/Notifications`, data).then((data) => data);
+
+export const uploadProfile = async (config) =>
+  await fetch(`${baseURL}api/users/upload`, config)
+    .then((response) => response.json())
+    .then((data) => data);
